@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -14,6 +15,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -95,6 +97,11 @@ public class Telemetry {
         SmartDashboard.putNumber("IMU Heading", Robot.currentAngle);
         SmartDashboard.putNumber("Target Angle", Robot.targetAngle);
         SmartDashboard.putNumber("Target Rot. Rate", RobotContainer.targetRotationalRate);
+        SmartDashboard.putString("Last Network Message", Robot.lastMessage[0]);
+        SmartDashboard.putNumber("current detections size", Robot.currentDetectedAprilTags.size());
+
+
+
 
         /* Also write to log file */
         m_poseArray[0] = state.Pose.getX();

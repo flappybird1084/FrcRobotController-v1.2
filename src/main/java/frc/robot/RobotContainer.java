@@ -6,10 +6,16 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.ArrayList;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AprilTagDetected;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
@@ -84,5 +91,46 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
+    
     }
+
+    public static Thread getIPAddressListenerThread(int port, String ipAddress, String[] lastMessage){
+        Thread packetListener = new Thread() {
+        @Override
+        public void run() {
+        try (DatagramSocket socket = new DatagramSocket(port, InetAddress.getByName(ipAddress))) {
+                System.out.println("Listening for packets on IP: " + ipAddress + ", Port: " + port);
+
+                byte[] receiveData = new byte[1024]; // Buffer to hold incoming data
+                DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
+
+                while (true) {
+                    // Receive a packet
+                    socket.receive(packet);
+
+                    // Extract the packet data
+                    String receivedMessage = new String(packet.getData(), 0, packet.getLength());
+                    // System.out.println("Received packet: " + receivedMessage);
+
+                    // // Print the sender's address and port
+                    // System.out.println("From IP: " + packet.getAddress().getHostAddress() + ", Port: " + packet.getPort());4
+                    // System.out.println(receivedMessage);
+                    lastMessage[0] = receivedMessage;
+                    // Send a response back to the sender if needed
+                    // socket.send(packet); // Uncomment this line if you want to send a response
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+  return packetListener;
+
+    }   
+
+
+
 }
