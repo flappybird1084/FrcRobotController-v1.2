@@ -22,6 +22,17 @@ import frc.robot.subsystems.*;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 public class Robot extends TimedRobot {
+  //Constants
+  public static final int ELEVATOR_NEO_CAN_ID_1 = 21;
+  public static final int ELEVATOR_NEO_CAN_ID_2 = 22;
+
+  public static final double JOYSTICK_YAW_MULTIPLIER = 4;
+  public static final double JOYSTICK_ELEVATOR_MULTIPLIER =0.1;
+
+  public final int port = 1234;
+  public final String ipAddress = "0.0.0.0";
+  //End Constants
+
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -29,23 +40,16 @@ public class Robot extends TimedRobot {
 
   public static double currentAngle;
   public static double targetAngle = RobotContainer.imu.getYaw().getValueAsDouble();
-
-  public static SparkMax test = new SparkMax(21, MotorType.kBrushless);
-
-
   double targetRotationalRate;
 
-  public static final double JOYSTICK_YAW_MULTIPLIER = 4;
+  public static SparkMax elevatorNeo1 = new SparkMax(ELEVATOR_NEO_CAN_ID_1, MotorType.kBrushless);
+  public static SparkMax elevatorNeo2 = new SparkMax(ELEVATOR_NEO_CAN_ID_2, MotorType.kBrushless);
 
-  public final int port = 1234;
-  public final String ipAddress = "0.0.0.0";
   public static String[] lastMessage = new String[]{"No messages to display"};
 
   String[] split_strings;
   ArrayList<AprilTagDetected> tags;
-
   public static ArrayList<AprilTagDetected> currentDetectedAprilTags = new ArrayList<AprilTagDetected>();
-
 
   private Thread IPAddressListenerThread = RobotContainer.getIPAddressListenerThread(port, ipAddress, lastMessage);
 
@@ -77,25 +81,18 @@ public class Robot extends TimedRobot {
 
     split_strings = lastMessage[0].split("-next-detection-");
     tags = new ArrayList<>();
-    // System.out.println("split strings length: " + split_strings.length);
-    // System.out.println("split strings[0]: " + split_strings[0]);
-    // System.out.println("split strings[1]: " + split_strings[1]);
-
     for (String tag:split_strings){
       try{
-
         tags.add(AprilTagDetected.parseTag(tag));
         System.out.println("tag id" +  AprilTagDetected.parseTag(tag).getTagId());
         } catch (Exception e){
-          // System.out.println("Invalid tag: " + tag);
-          
+          // System.out.println("Invalid tag: " + tag); 
         }
-
     }
-
-    
-
     currentDetectedAprilTags = tags;
+
+    elevatorNeo1.set(joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
+    elevatorNeo2.set(-joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
 
   }
 

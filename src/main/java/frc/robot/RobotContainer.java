@@ -95,14 +95,13 @@ public class RobotContainer {
     }
 
     public static Thread getIPAddressListenerThread(int port, String ipAddress, String[] lastMessage){
-        final int MAX_DATA_SIZE = 16384;
         Thread packetListener = new Thread() {
         @Override
         public void run() {
         try (DatagramSocket socket = new DatagramSocket(port, InetAddress.getByName(ipAddress))) {
                 System.out.println("Listening for packets on IP: " + ipAddress + ", Port: " + port);
 
-                byte[] receiveData = new byte[MAX_DATA_SIZE]; // Buffer to hold incoming data
+                byte[] receiveData = new byte[16384]; // Buffer to hold incoming data
                 DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
 
                 while (true) {
