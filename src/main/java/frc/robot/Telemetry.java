@@ -100,9 +100,6 @@ public class Telemetry {
         SmartDashboard.putString("Last Network Message", Robot.lastMessage[0]);
         SmartDashboard.putNumber("current detections size", Robot.currentDetectedAprilTags.size());
 
-
-
-
         /* Also write to log file */
         m_poseArray[0] = state.Pose.getX();
         m_poseArray[1] = state.Pose.getY();
