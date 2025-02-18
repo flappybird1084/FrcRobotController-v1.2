@@ -4,58 +4,25 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sound.sampled.SourceDataLine;
-
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.*;
-// import com.google.gson.Gson;
-
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 public class Robot extends TimedRobot {
-  //Constants
-  public static final int ELEVATOR_NEO_CAN_ID_1 = 21;
-  public static final int ELEVATOR_NEO_CAN_ID_2 = 22;
 
-  public static final double JOYSTICK_YAW_MULTIPLIER = 4;
-  public static final double JOYSTICK_ELEVATOR_MULTIPLIER =0.1;
-
-  public final int port = 1234;
-  public final String ipAddress = "0.0.0.0";
-  //End Constants
 
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-  public static final CommandXboxController joystick = new CommandXboxController(0);
+  public static final CommandXboxController joystick = new CommandXboxController(Constants.driverJoystickPort);
+  public static final ControllerXbox controller = new ControllerXbox(Constants.driverJoystickPort);
 
-  public static double currentAngle;
-  public static double targetAngle = RobotContainer.imu.getYaw().getValueAsDouble();
-  double targetRotationalRate;
+  public static Elevator elevator = new Elevator();
+  public static MessageListener messageListener = new MessageListener();
+  public static Drive drive = new Drive();
 
-  public static SparkMax elevatorNeo1 = new SparkMax(ELEVATOR_NEO_CAN_ID_1, MotorType.kBrushless);
-  public static SparkMax elevatorNeo2 = new SparkMax(ELEVATOR_NEO_CAN_ID_2, MotorType.kBrushless);
-
-  public static String[] lastMessage = new String[]{"No messages to display"};
-
-  String[] split_strings;
-  ArrayList<AprilTagDetected> tags;
-  public static ArrayList<AprilTagDetected> currentDetectedAprilTags = new ArrayList<AprilTagDetected>();
-
-  private Thread IPAddressListenerThread = RobotContainer.getIPAddressListenerThread(port, ipAddress, lastMessage);
-
-  //public static PIDController yawPIDController = new PIDController(0.02, 0.00003, 0.0015);
-  // public static PIDController yawPIDController = new PIDController(0.0325, 0.00007, 0.002);
-  public static PIDController yawPIDController = new PIDController(0.02, 0.0001, 0.00);
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -63,36 +30,24 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
 
-    if (!IPAddressListenerThread.isAlive()){
-      IPAddressListenerThread.start();
+    CommandScheduler.getInstance().run();   
+
+    // System.out.println("passed commandscheduler");
+
+
+    elevator.setSpeed(joystick.getRightY());
+
+    drive.drive(joystick);
+
+
+    if(controller.getA()){
+      System.out.println("Button A was pressed");
+
     }
 
-    currentAngle = RobotContainer.imu.getYaw().getValueAsDouble();
-    if(Math.abs(joystick.getRightX()) > 0.1){
-      targetAngle -= joystick.getRightX()*JOYSTICK_YAW_MULTIPLIER;
-    }
-    
-    yawPIDController.setSetpoint(targetAngle);
-    targetRotationalRate = yawPIDController.calculate(currentAngle);
-
-    RobotContainer.targetRotationalRate = targetRotationalRate;
-
-    split_strings = lastMessage[0].split("-next-detection-");
-    tags = new ArrayList<>();
-    for (String tag:split_strings){
-      try{
-        tags.add(AprilTagDetected.parseTag(tag));
-        System.out.println("tag id" +  AprilTagDetected.parseTag(tag).getTagId());
-        } catch (Exception e){
-          // System.out.println("Invalid tag: " + tag); 
-        }
-    }
-    currentDetectedAprilTags = tags;
-
-    elevatorNeo1.set(joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
-    elevatorNeo2.set(-joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
+    // elevatorNeo1.set(joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
+    // elevatorNeo2.set(-joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
 
   }
 
@@ -147,3 +102,5 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {}
 }
+
+

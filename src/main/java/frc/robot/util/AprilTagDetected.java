@@ -1,6 +1,5 @@
-package frc.robot.subsystems;
+package frc.robot.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AprilTagDetected {
