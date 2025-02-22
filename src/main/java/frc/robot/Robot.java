@@ -17,7 +17,6 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   public static final CommandXboxController joystick = new CommandXboxController(Constants.driverJoystickPort);
-  public static final ControllerXbox controller = new ControllerXbox(Constants.driverJoystickPort);
 
   public static Elevator elevator = new Elevator();
   public static MessageListener messageListener = new MessageListener();
@@ -41,7 +40,7 @@ public class Robot extends TimedRobot {
     drive.drive(joystick);
 
 
-    if(controller.getA()){
+    if(joystick.getHID().getAButtonPressed()){
       System.out.println("Button A was pressed");
 
     }

@@ -2,9 +2,12 @@ package frc.robot.constants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.pathplanner.lib.config.PIDConstants;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
@@ -25,6 +28,14 @@ public class Constants {
     public static final int driverJoystickPort = 0;
     public static final int pigeonId = 15;
 
+    public static final double maxSwerveModuleSpeed = 1; //original 4.5
+
+    public static final Translation2d flModuleOffset = new Translation2d(0.546 / 2.0, 0.546 / 2.0); //need to update
+    public static final Translation2d frModuleOffset = new Translation2d(0.546 / 2.0, -0.546 / 2.0);
+    public static final Translation2d blModuleOffset = new Translation2d(-0.546 / 2.0, 0.546 / 2.0);
+    public static final Translation2d brModuleOffset = new Translation2d(-0.546 / 2.0, -0.546 / 2.0);
+
+
     //Motors + IDs
     public static SparkMax elevatorNeo1 = new SparkMax(ELEVATOR_NEO_CAN_ID_1, MotorType.kBrushless);
     public static SparkMax elevatorNeo2 = new SparkMax(ELEVATOR_NEO_CAN_ID_2, MotorType.kBrushless);
@@ -35,11 +46,17 @@ public class Constants {
 
     public static final Pigeon2 imu = new Pigeon2(pigeonId);
 
+
     //PID Controllers
         //Yaw
         //public static PIDController yawPIDController = new PIDController(0.02, 0.00003, 0.0015);
         // public static PIDController yawPIDController = new PIDController(0.0325, 0.00007, 0.002);
         public static PIDController yawPIDController = new PIDController(0.02, 0.0001, 0.00);
+
+        //Drive
+        public static final PIDConstants translationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
+        public static final PIDConstants rotationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
+
 
 
 }
