@@ -34,10 +34,8 @@ public class Robot extends TimedRobot {
 
     // System.out.println("passed commandscheduler");
 
-
-    elevator.setSpeed(joystick.getRightY());
-
-    drive.drive(joystick);
+    //Left is up, Right is down
+    // elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
 
 
     if(joystick.getHID().getAButtonPressed()){
@@ -82,7 +80,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    drive.drive(joystick);
+    elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+  }
 
   @Override
   public void teleopExit() {}

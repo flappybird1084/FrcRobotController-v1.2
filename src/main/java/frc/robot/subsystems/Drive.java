@@ -6,6 +6,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -86,8 +87,8 @@ public class Drive extends SubsystemBase{
         // Set up custom logging to add the current path to a field 2d widget
         PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
 
-        SmartDashboard.putData("Field", field);
 
+        SmartDashboard.putData("Field", field);
 
     }
 
@@ -173,5 +174,11 @@ public class Drive extends SubsystemBase{
       positions[i] = modules[i].getPosition(false);
     }
     return positions;
+  }
+
+  public void stop(){
+    for(int i = 0; i < modules.length; i++){
+        modules[i].apply(new ModuleRequest().withWheelForceFeedforwardX(0.0).withWheelForceFeedforwardY(0.0));
+    }
   }
 }

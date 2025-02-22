@@ -17,7 +17,7 @@ public class Constants {
     public static final int ELEVATOR_NEO_CAN_ID_2 = 22;
   
     public static final double JOYSTICK_YAW_MULTIPLIER = 4;
-    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =0.1;
+    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =0.7;
   
     public static final int IP_ADDRESS_LISTEN_PORT = 1234;
     public static final String LISTEN_IP_ADDRESS = "0.0.0.0";
