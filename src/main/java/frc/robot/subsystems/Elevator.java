@@ -27,8 +27,22 @@ public class Elevator extends SubsystemBase {
 
     public void setSpeed(double power){
         this.power = power * Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
+
+        // Limits
+        if (this.power < 0 && getPosition() <= Constants.MAX_ELEVATOR_POSITION) this.power = 0;
+        if (this.power > 0 && getPosition() >= Constants.MIN_ELEVATOR_POSITION) this.power = 0;
+
+        // Speed Limiting when near the limits
+        if (this.power < 0 && getPosition() <= Constants.MAX_ELEVATOR_POSITION + Constants.ELEVATOR_SPEED_LIMIT_OFFSET) this.power = Math.max(Constants.JOYSTICK_ELEVATOR_MULTIPLIER*Constants.ELEVATOR_SPEED_LIMIT_MULTIPLIER, this.power);
+        if (this.power > 0 && getPosition() >= Constants.MIN_ELEVATOR_POSITION-Constants.ELEVATOR_SPEED_LIMIT_OFFSET) this.power = Math.min(-Constants.JOYSTICK_ELEVATOR_MULTIPLIER*Constants.ELEVATOR_SPEED_LIMIT_MULTIPLIER, this.power);
+
+
         elevatorNeo1.set(this.power);
         elevatorNeo2.set(this.power);
+    }
+
+    public double getPosition() {
+        return elevatorNeo2.getEncoder().getPosition();
     }
 
     public void stop() {

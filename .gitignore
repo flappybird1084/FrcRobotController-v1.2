@@ -5,3 +5,7 @@ build/
 # Windows specific files and folders
 Thumbs.db
 ehthumbs.db
+
+.gradle
+.Glass
+bin

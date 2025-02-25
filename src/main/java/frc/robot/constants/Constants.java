@@ -17,7 +17,12 @@ public class Constants {
     public static final int ELEVATOR_NEO_CAN_ID_2 = 22;
   
     public static final double JOYSTICK_YAW_MULTIPLIER = 4;
-    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =0.7;
+    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-0.7;
+
+    public static final double MAX_ELEVATOR_POSITION = -3.2; // 3.2 normal
+    public static final double MIN_ELEVATOR_POSITION = -0.3;
+    public static final double ELEVATOR_SPEED_LIMIT_OFFSET = 0.6;
+    public static final double ELEVATOR_SPEED_LIMIT_MULTIPLIER = 0.3;
   
     public static final int IP_ADDRESS_LISTEN_PORT = 1234;
     public static final String LISTEN_IP_ADDRESS = "0.0.0.0";
@@ -55,7 +60,7 @@ public class Constants {
          * sometimes fast one
          */
         // public static PIDController yawPIDController = new PIDController(0.0325, 0.00007, 0.002);
-        
+
         public static PIDController yawPIDController = new PIDController(0.02, 0.0001, 0.00);
 
         //Drive
