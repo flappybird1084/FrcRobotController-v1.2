@@ -18,6 +18,7 @@ public class Constants {
   
     public static final double JOYSTICK_YAW_MULTIPLIER = 4;
     public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-0.7;
+    public static final double ELEVATOR_SETPOINT_CONSTANT = 0.5;
 
     public static final double MAX_ELEVATOR_POSITION = -3.2; // 3.2 normal
     public static final double MIN_ELEVATOR_POSITION = -0.3;
@@ -66,6 +67,10 @@ public class Constants {
         //Drive
         public static final PIDConstants translationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
         public static final PIDConstants rotationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
+
+        //Elevator
+        public static PIDController elevatorPidController = new PIDController(1, 0, 0); // PID Controller for Elevator
+
 
 
 

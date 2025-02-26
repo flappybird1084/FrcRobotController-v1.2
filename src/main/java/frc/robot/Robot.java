@@ -38,10 +38,10 @@ public class Robot extends TimedRobot {
     // elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
 
 
-    if(joystick.getHID().getAButtonPressed()){
-      System.out.println("Button A was pressed");
+    // if(joystick.getHID().getAButtonPressed()){
+    //   System.out.println("Button A was pressed");
 
-    }
+    // }
 
     // elevatorNeo1.set(joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
     // elevatorNeo2.set(-joystick.getRightY()*JOYSTICK_ELEVATOR_MULTIPLIER);
@@ -82,7 +82,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive.drive(joystick);
-    elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+    // elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+    elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+
+    if(joystick.getHID().getYButtonPressed()){
+      elevator.calibrateBottomPosition();
+      System.out.println("calibrated bottom position");
+    }
   }
 
   @Override
