@@ -2,7 +2,6 @@ package frc.robot.constants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.pathplanner.lib.config.PIDConstants;
 import com.revrobotics.spark.SparkMax;
 
@@ -22,6 +21,7 @@ public class Constants {
 
     public static final double MAX_ELEVATOR_POSITION = -3.2; // 3.2 normal
     public static final double MIN_ELEVATOR_POSITION = -0.3;
+
     public static final double ELEVATOR_SPEED_LIMIT_OFFSET = 0.6;
     public static final double ELEVATOR_SPEED_LIMIT_MULTIPLIER = 0.3;
   

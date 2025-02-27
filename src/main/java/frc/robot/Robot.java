@@ -89,22 +89,17 @@ public class Robot extends TimedRobot {
 
     if(!alternativeElevatorMode)
     {
-       elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); //left up right down
+      //  elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); //left up right down
+      elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); //left up right down
     }
     else{
       elevator.setSpeedNoLimit(-joystick.getRightTriggerAxis()+joystick.getLeftTriggerAxis()); //left up right down
     }
 
     if(joystick.getHID().getYButtonPressed()){
-      elevator.calibrateBottomPosition();
-      System.out.println("calibrated bottom position");
+      elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
     }
 
-    joystick.x().toggleOnTrue(new InstantCommand(() -> {
-      alternativeElevatorMode = !alternativeElevatorMode;
-      System.out.println("alternative elevator mode: " + alternativeElevatorMode);
-
-    }));
 
   }
 

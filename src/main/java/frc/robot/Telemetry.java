@@ -97,8 +97,8 @@ public class Telemetry {
         SmartDashboard.putNumber("Target Rot. Rate", Robot.drive.getTargetRotationalRate());
         SmartDashboard.putString("Last Network Message", Robot.messageListener.getLastMessage());
         SmartDashboard.putNumber("current detections size", Robot.messageListener.getCurrentDetectedAprilTags().size());
-        SmartDashboard.putNumber("Elevator position", Robot.elevator.getPosition());
-        SmartDashboard.putNumber("Elevator Target Position", Robot.elevator.getTargetPosition());
+        SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
+    
 
         /* Also write to log file */
         m_poseArray[0] = state.Pose.getX();
