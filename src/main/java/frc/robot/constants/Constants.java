@@ -55,14 +55,14 @@ public class Constants {
 
     //PID Controllers
         //Yaw
-        //public static PIDController yawPIDController = new PIDController(0.02, 0.00003, 0.0015);\
+        public static PIDController yawPIDController = new PIDController(0.02, 0.00003, 0.0015);
         /**
          * https://www.reddit.com/r/FRC/comments/11a8auf/finally_got_our_swerve_drive_working/
          * sometimes fast one
          */
         // public static PIDController yawPIDController = new PIDController(0.0325, 0.00007, 0.002);
 
-        public static PIDController yawPIDController = new PIDController(0.02, 0.0001, 0.00);
+        //public static PIDController yawPIDController = new PIDController(0.02, 0.0001, 0.00);
 
         //Drive
         public static final PIDConstants translationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5

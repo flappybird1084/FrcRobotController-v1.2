@@ -12,7 +12,7 @@ public class Elevator extends SubsystemBase {
     private final SparkMax elevatorNeo2;
     // private final CommandXboxController joystick;
     private double power;
-    private double targetPosition;
+    private static double targetPosition;
     private PIDController pidController;
     private double neoOffset;
 
@@ -22,6 +22,8 @@ public class Elevator extends SubsystemBase {
         elevatorNeo2 = Constants.elevatorNeo2;
         targetPosition = getPosition();
         pidController = Constants.elevatorPidController;
+
+        calibrateBottomPosition();
         // joystick = Constants.joystick;
         // Initialize any necessary components here
 
@@ -55,20 +57,25 @@ public class Elevator extends SubsystemBase {
         elevatorNeo2.set(this.power);
     }
 
+    public void setSpeedNoLimit(double power){
+        this.power = power*Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
+        elevatorNeo1.set(this.power);
+        elevatorNeo2.set(this.power);
+    }
+
     public double getPosition() {
         return elevatorNeo2.getEncoder().getPosition();
     }
 
     public void setPosition(double setpoint){
-        setpoint += Constants.ELEVATOR_SETPOINT_CONSTANT;
+        setpoint *= Constants.ELEVATOR_SETPOINT_CONSTANT;
         
         if(setpoint > Constants.MIN_ELEVATOR_POSITION+neoOffset)
             setpoint = Constants.MIN_ELEVATOR_POSITION+neoOffset;
         if(setpoint < Constants.MAX_ELEVATOR_POSITION+neoOffset)
             setpoint = Constants.MAX_ELEVATOR_POSITION+neoOffset;
 
-        this.targetPosition = setpoint;
-        double error = pidController.calculate(this.getPosition(), targetPosition);
+        double error = pidController.calculate(this.getPosition(), setpoint/Constants.ELEVATOR_SETPOINT_CONSTANT);
 
         this.power = Math.min(error, 0.5); // Slow down the motor to prevent overshooting
 
@@ -77,6 +84,12 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setPositionRelative(double setpoint){
+        if((setpoint+targetPosition)> Constants.MIN_ELEVATOR_POSITION && setpoint>0)
+            setpoint = 0;
+        else if((setpoint+targetPosition)< Constants.MAX_ELEVATOR_POSITION && setpoint<0)
+            setpoint = 0;
+
+
         targetPosition = targetPosition + setpoint;
         setPosition(targetPosition);
     }

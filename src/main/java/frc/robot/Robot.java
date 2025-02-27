@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.*;
@@ -21,6 +22,8 @@ public class Robot extends TimedRobot {
   public static Elevator elevator = new Elevator();
   public static MessageListener messageListener = new MessageListener();
   public static Drive drive = new Drive();
+
+  public static boolean alternativeElevatorMode = false;
 
 
   public Robot() {
@@ -83,12 +86,26 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive.drive(joystick);
     // elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
-    elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+
+    if(!alternativeElevatorMode)
+    {
+       elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); //left up right down
+    }
+    else{
+      elevator.setSpeedNoLimit(-joystick.getRightTriggerAxis()+joystick.getLeftTriggerAxis()); //left up right down
+    }
 
     if(joystick.getHID().getYButtonPressed()){
       elevator.calibrateBottomPosition();
       System.out.println("calibrated bottom position");
     }
+
+    joystick.x().toggleOnTrue(new InstantCommand(() -> {
+      alternativeElevatorMode = !alternativeElevatorMode;
+      System.out.println("alternative elevator mode: " + alternativeElevatorMode);
+
+    }));
+
   }
 
   @Override
