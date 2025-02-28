@@ -26,8 +26,8 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private final double JOYSTICK_LEFT_Y_MULTIPLIER = Constants.JOYSTICK_LEFT_Y_MULTIPLIER;
     private final double JOYSTICK_LEFT_X_MULTIPLIER = Constants.JOYSTICK_LEFT_X_MULTIPLIER;
@@ -39,7 +39,7 @@ public class RobotContainer {
     public static double targetY = 0.0;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    public static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -49,7 +49,8 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
 
     //Subsystems
     Drive driveSubsystem = new Drive();
@@ -64,7 +65,7 @@ public class RobotContainer {
         // driveSubsystem.setDefaultCommand(new JoystickDriveCommand(driveSubsystem, joystick));
         // elevatorSubsystem.setDefaultCommand(new ElevatorMoveCommand(elevatorSubsystem,joystick));
 
-        SmartDashboard.putData("Example Auto", new PathPlannerAuto("Example Auto"));
+        SmartDashboard.putData("Example Path", new PathPlannerAuto("Example Path"));
 
 
         // Note that X is defined as forward according to WPILib convention,
@@ -81,6 +82,7 @@ public class RobotContainer {
                     .withVelocityY(targetX * MaxSpeed * JOYSTICK_LEFT_X_MULTIPLIER) // Drive left with negative X (left)
                     .withRotationalRate(targetRotationalRate*MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
+            
         );
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -103,7 +105,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // return Commands.print("No autonomous command configured");
-        return new PathPlannerAuto("Example Auto");
+        return new PathPlannerAuto("Example Path");
     
     }
 

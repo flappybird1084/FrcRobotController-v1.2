@@ -13,6 +13,8 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
 
+  public static boolean shouldDisableDrive = false;
+
 
   private Command m_autonomousCommand;
 
@@ -67,10 +69,12 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() { 
+}
 
   @Override
   public void autonomousExit() {}
@@ -80,10 +84,14 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+
   }
 
   @Override
   public void teleopPeriodic() {
+
+
     drive.drive(joystick);
     // elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
 
@@ -98,6 +106,7 @@ public class Robot extends TimedRobot {
 
     if(joystick.getHID().getYButtonPressed()){
       elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
+      System.out.println("elevator offset reset");
     }
 
 

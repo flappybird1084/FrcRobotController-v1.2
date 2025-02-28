@@ -98,6 +98,7 @@ public class Telemetry {
         SmartDashboard.putString("Last Network Message", Robot.messageListener.getLastMessage());
         SmartDashboard.putNumber("current detections size", Robot.messageListener.getCurrentDetectedAprilTags().size());
         SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
+        SmartDashboard.putNumber("Elevator Offset", Robot.elevator.elevatorOffset);
     
 
         /* Also write to log file */

@@ -9,6 +9,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+import static edu.wpi.first.units.Units.*;
+
 public class Constants {
 
     //Numbers
@@ -19,8 +21,8 @@ public class Constants {
     public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-0.7;
     public static final double ELEVATOR_SETPOINT_CONSTANT = 0.5;
 
-    public static final double MAX_ELEVATOR_POSITION = -3.2; // 3.2 normal
-    public static final double MIN_ELEVATOR_POSITION = -0.3;
+    public static final double MAX_ELEVATOR_POSITION = -3.28; // 3.2 normal
+    public static final double MIN_ELEVATOR_POSITION = 0;
 
     public static final double ELEVATOR_SPEED_LIMIT_OFFSET = 0.6;
     public static final double ELEVATOR_SPEED_LIMIT_MULTIPLIER = 0.3;
@@ -41,6 +43,10 @@ public class Constants {
     public static final Translation2d blModuleOffset = new Translation2d(-0.546 / 2.0, 0.546 / 2.0);
     public static final Translation2d brModuleOffset = new Translation2d(-0.546 / 2.0, -0.546 / 2.0);
 
+    public static final double MAX_SPEED = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    public static final double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+
 
     //Motors + IDs
     public static SparkMax elevatorNeo1 = new SparkMax(ELEVATOR_NEO_CAN_ID_1, MotorType.kBrushless);
@@ -55,7 +61,7 @@ public class Constants {
 
     //PID Controllers
         //Yaw
-        public static PIDController yawPIDController = new PIDController(0.02, 0.00003, 0.0015);
+        public static PIDController yawPIDController = new PIDController(0.02, 0.00001, 0.0015);
         /**
          * https://www.reddit.com/r/FRC/comments/11a8auf/finally_got_our_swerve_drive_working/
          * sometimes fast one

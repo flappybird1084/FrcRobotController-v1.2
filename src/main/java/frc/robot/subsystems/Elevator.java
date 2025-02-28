@@ -15,7 +15,7 @@ public class Elevator extends SubsystemBase {
     private static double targetPosition;
     private PIDController pidController;
     private double neoOffset;
-    public static double elevatorOffset = -1.5;
+    public static double elevatorOffset = 0;
 
 
     public Elevator() {
@@ -62,6 +62,9 @@ public class Elevator extends SubsystemBase {
         // elevatorNeo1.set(this.power);
         // elevatorNeo2.set(this.power);
          // Apply joystick multiplier to the input power
+         if(power == 0){
+            power = 0.02;
+         }
     this.power = power * Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
     
     // Adjusted position considering the elevator's offset
