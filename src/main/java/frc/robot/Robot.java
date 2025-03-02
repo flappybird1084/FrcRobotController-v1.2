@@ -93,15 +93,15 @@ public class Robot extends TimedRobot {
 
 
     drive.drive(joystick);
-    // elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+    elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
 
     if(!alternativeElevatorMode)
     {
-      //  elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); //left up right down
-      elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); //left up right down
+      //  elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); 
+      elevator.setSpeed(-joystick.getRightTriggerAxis()+joystick.getLeftTriggerAxis()); //left up right down
     }
     else{
-      elevator.setSpeedNoLimit(-joystick.getRightTriggerAxis()+joystick.getLeftTriggerAxis()); //left up right down
+      elevator.setSpeedNoLimit(-joystick.getRightTriggerAxis()+joystick.getLeftTriggerAxis()); 
     }
 
     if(joystick.getHID().getYButtonPressed()){

@@ -25,12 +25,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
+import frc.robot.util.ProportionalSlowdownController;
 
 public class Drive extends SubsystemBase{
     private double currentAngle;
     private double targetAngle;
     private double targetRotationalRate;
     private static PIDController yawPIDController;
+    private static ProportionalSlowdownController yawProportionalSlowdownController;
     private final double JOYSTICK_YAW_MULTIPLIER = Constants.JOYSTICK_YAW_MULTIPLIER;
 
     private SwerveModule[] modules = new SwerveModule[4];
@@ -42,10 +44,13 @@ public class Drive extends SubsystemBase{
 
     CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    
+
 
     public Drive() {
         this.targetAngle = gyro.getYaw().getValueAsDouble();
         yawPIDController = Constants.yawPIDController;
+        yawProportionalSlowdownController = new ProportionalSlowdownController();
 
         modules = drivetrain.getModules(); // does this kill robotcontainer code??
         kinematics = drivetrain.getKinematics(); // does this kill robotcontainer code??
@@ -106,8 +111,16 @@ public class Drive extends SubsystemBase{
             targetAngle -= joystick.getRightX() * JOYSTICK_YAW_MULTIPLIER;
         }
     
-        yawPIDController.setSetpoint(targetAngle);
-        targetRotationalRate = yawPIDController.calculate(currentAngle);
+        // yawPIDController.setSetpoint(targetAngle);
+        // targetRotationalRate = yawPIDController.calculate(currentAngle);
+        if(Math.abs(joystick.getRightX()) < 0.1){
+            targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle, 0.01);
+
+        }
+        else{
+        targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle);
+        }
+
         RobotContainer.targetRotationalRate = targetRotationalRate;
         RobotContainer.targetY = joystick.getLeftY();
         RobotContainer.targetX = joystick.getLeftX();
@@ -175,6 +188,11 @@ public class Drive extends SubsystemBase{
     }
     return positions;
   }
+
+  public SwerveDriveKinematics getKinematics() {
+    return kinematics;
+  }
+
 
   public void stop(){
     for(int i = 0; i < modules.length; i++){

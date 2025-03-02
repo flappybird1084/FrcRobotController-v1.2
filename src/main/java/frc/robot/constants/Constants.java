@@ -7,6 +7,8 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.ExponentialProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import static edu.wpi.first.units.Units.*;
@@ -45,6 +47,9 @@ public class Constants {
 
     public static final double MAX_SPEED = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static final double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static final double MAX_ACCELERATION = MetersPerSecondPerSecond.of(1.5).in(MetersPerSecondPerSecond);
+
+    public static final TrapezoidProfile.Constraints translationConstraints = new TrapezoidProfile.Constraints(MAX_SPEED, MAX_ACCELERATION);
 
 
 
@@ -61,7 +66,7 @@ public class Constants {
 
     //PID Controllers
         //Yaw
-        public static PIDController yawPIDController = new PIDController(0.02, 0.00001, 0.0015);
+        public static PIDController yawPIDController = new PIDController(0.025, 0.000015, 0.0015);
         /**
          * https://www.reddit.com/r/FRC/comments/11a8auf/finally_got_our_swerve_drive_working/
          * sometimes fast one
@@ -71,8 +76,11 @@ public class Constants {
         //public static PIDController yawPIDController = new PIDController(0.02, 0.0001, 0.00);
 
         //Drive
+        // public static final PIDConstants translationConstants = new PIDConstants(5.0, 0.0, 0.0); //original p 5
+        // public static final PIDConstants rotationConstants = new PIDConstants(5.0, 0.0, 0.0); //original p 5
         public static final PIDConstants translationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
         public static final PIDConstants rotationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
+
 
         //Elevator
         public static PIDController elevatorPidController = new PIDController(1, 0, 0); // PID Controller for Elevator

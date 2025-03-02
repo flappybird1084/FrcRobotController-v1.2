@@ -25,6 +25,7 @@
       "/Pose": "Field2d",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Example Auto": "Command",
+      "/SmartDashboard/Example Path": "Command",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
