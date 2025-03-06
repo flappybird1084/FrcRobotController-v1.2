@@ -33,6 +33,8 @@ import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    public final double originalMaxSpeed = MaxSpeed; // max speed for the robot
+
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private final double JOYSTICK_LEFT_Y_MULTIPLIER = Constants.JOYSTICK_LEFT_Y_MULTIPLIER;
@@ -66,6 +68,16 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
     }
+
+    public void setMaxSpeed(double speed) {
+        MaxSpeed = speed;
+    }
+
+    public double getMaxSpeed() {
+        return MaxSpeed;
+    }
+
+
 
     private void configureBindings() {
         // driveSubsystem.setDefaultCommand(new JoystickDriveCommand(driveSubsystem, joystick));
@@ -115,6 +127,7 @@ public class RobotContainer {
         // return Commands.print("No autonomous command configured");
         // return new PathPlannerAuto("New Auto");
             // Define the start pose, interior waypoints, and end pose
+        /*
         Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
         List<Translation2d> interiorWaypoints = List.of(
                 new Translation2d(1.0, 1.0),
@@ -127,6 +140,8 @@ public class RobotContainer {
 
         // Create and return the command to follow the trajectory
         return new FollowPathCommand(trajectory, driveSubsystem);
+        */
+        return new PathPlannerAuto("New Auto");
     
     
     }

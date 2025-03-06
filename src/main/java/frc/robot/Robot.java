@@ -20,10 +20,12 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   public static final CommandXboxController joystick = new CommandXboxController(Constants.driverJoystickPort);
+  public static final CommandXboxController coJoystick = new CommandXboxController(Constants.coDriverJoystickPort);
 
   public static Elevator elevator = new Elevator();
   public static MessageListener messageListener = new MessageListener();
   public static Drive drive = new Drive();
+  // public static Intake intake = new Intake();
 
   public static boolean alternativeElevatorMode = false;
 
@@ -91,23 +93,26 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    // m_robotContainer.setMaxSpeed(m_robotContainer.originalMaxSpeed * Math.max((1-elevator.getPercentageUp()), 0.1));
 
     drive.drive(joystick);
-    elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+    elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
-    if(!alternativeElevatorMode)
-    {
-      //  elevator.setPositionRelative(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis()); 
-      elevator.setSpeed(-joystick.getRightTriggerAxis()+joystick.getLeftTriggerAxis()); //left up right down
-    }
-    else{
-      elevator.setSpeedNoLimit(-joystick.getRightTriggerAxis()+joystick.getLeftTriggerAxis()); 
-    }
-
-    if(joystick.getHID().getYButtonPressed()){
+    if(coJoystick.getHID().getBackButtonPressed()){
       elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
       System.out.println("elevator offset reset");
     }
+
+    if(coJoystick.getHID().getBButtonPressed()){ //preset for coral processor
+      elevator.setPosition(-2.0);
+      //add intake
+    }
+
+    
+
+    // intake.setIntakePower(coJoystick.getRightY());
+    // intake.setPitchPower(coJoystick.getLeftY());
+
 
 
   }

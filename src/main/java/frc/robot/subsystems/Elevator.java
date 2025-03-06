@@ -149,7 +149,14 @@ public class Elevator extends SubsystemBase {
 
     public void calibrateBottomPosition(){
         //assume we're at the bottom position
-        neoOffset = (-Constants.MIN_ELEVATOR_POSITION+getPosition()) *-1;
+        // neoOffset = (-Constants.MIN_ELEVATOR_POSITION+getPosition()) *-1;
+        neoOffset = 0; //screw having good code we're compensating by having a functional elevator
+    }
+
+    public double getPercentageUp() {
+        double output = (targetPosition - getPosition()) / Constants.MAX_ELEVATOR_POSITION;
+        output = Math.max(0, Math.min(1, output));
+        return output;
     }
 
     public void stop() {

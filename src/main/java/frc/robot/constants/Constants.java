@@ -18,6 +18,10 @@ public class Constants {
     //Numbers
     public static final int ELEVATOR_NEO_CAN_ID_1 = 21;
     public static final int ELEVATOR_NEO_CAN_ID_2 = 22;
+
+    public static final int INTAKE_NEO_PITCH_CAN_ID = 26;
+    public static final int INTAKE_NEO_WHEEL_CAN_ID = 27; //TODO: implement
+
   
     public static final double JOYSTICK_YAW_MULTIPLIER = 4;
     public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-0.7;
@@ -36,6 +40,7 @@ public class Constants {
     public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.3;
 
     public static final int driverJoystickPort = 0;
+    public static final int coDriverJoystickPort = 1;
     public static final int pigeonId = 15;
 
     public static final double maxSwerveModuleSpeed = 1; //original 4.5
@@ -56,6 +61,10 @@ public class Constants {
     //Motors + IDs
     public static SparkMax elevatorNeo1 = new SparkMax(ELEVATOR_NEO_CAN_ID_1, MotorType.kBrushless);
     public static SparkMax elevatorNeo2 = new SparkMax(ELEVATOR_NEO_CAN_ID_2, MotorType.kBrushless);
+
+    public static SparkMax intakeNeoPitch = new SparkMax(INTAKE_NEO_PITCH_CAN_ID, MotorType.kBrushless);
+    public static SparkMax intakeNeoWheel = new SparkMax(INTAKE_NEO_WHEEL_CAN_ID, MotorType.kBrushless);
+
 
     public static final CommandXboxController joystick = new CommandXboxController(0);
 

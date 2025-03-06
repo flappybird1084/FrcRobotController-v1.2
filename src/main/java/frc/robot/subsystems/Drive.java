@@ -42,6 +42,10 @@ public class Drive extends SubsystemBase{
     private Field2d field = new Field2d();
     private Pigeon2 gyro = new Pigeon2(Constants.pigeonId);
 
+    private double limitedTargetX = 0.0;
+    private double limitedTargetY = 0.0;
+    private final double MAX_DELTA = 0.05; // Max joystick change (to prevent sudden acc)
+
     CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     
@@ -103,6 +107,26 @@ public class Drive extends SubsystemBase{
 
         field.setRobotPose(getPose());
     }
+
+    /**
+     * Limits the change of a value to within the specified maximum delta.
+     *
+     * @param currentValue The current limited target value.
+     * @param desiredValue The desired target value from the joystick.
+     * @param maxDelta The maximum allowed change per update.
+     * @return The new limited target value after applying the rate limit.
+     */
+    private double limitDelta(double currentValue, double desiredValue, double maxDelta) {
+        double delta = desiredValue - currentValue;
+        
+        if (delta > maxDelta) {
+            delta = maxDelta;
+        } else if (delta < -maxDelta) {
+            delta = -maxDelta;
+        }
+        
+        return currentValue + delta;
+    }
     
 
     public void drive(CommandXboxController joystick) {
@@ -122,8 +146,20 @@ public class Drive extends SubsystemBase{
         }
 
         RobotContainer.targetRotationalRate = targetRotationalRate;
-        RobotContainer.targetY = joystick.getLeftY();
-        RobotContainer.targetX = joystick.getLeftX();
+        // Get the desired joystick inputs
+        double desiredY = joystick.getLeftY();
+        double desiredX = joystick.getLeftX();
+
+        // Apply rate limiting to the joystick inputs
+        
+        // limitedTargetY = limitDelta(limitedTargetY, desiredY, MAX_DELTA);
+        // limitedTargetX = limitDelta(limitedTargetX, desiredX, MAX_DELTA);
+        limitedTargetX = desiredX;
+        limitedTargetY = desiredY;
+
+        // Update targetY and targetX with the limited values
+        RobotContainer.targetY = limitedTargetY;
+        RobotContainer.targetX = limitedTargetX;
     }
 
     public Pose2d getPose() {
