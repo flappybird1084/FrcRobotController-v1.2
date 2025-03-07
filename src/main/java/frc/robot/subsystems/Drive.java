@@ -194,8 +194,18 @@ public class Drive extends SubsystemBase{
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
-        SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
-        setStates(targetStates);
+        double targetPowerX = targetSpeeds.vxMetersPerSecond;
+        double targetPowerY = targetSpeeds.vyMetersPerSecond;
+        double targetRotationalPower = targetSpeeds.omegaRadiansPerSecond;
+        
+        // SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
+        // setStates(targetStates);
+         // old, not working for us
+
+        RobotContainer.targetX = targetPowerX;
+        RobotContainer.targetY = targetPowerY;
+        RobotContainer.targetRotationalRate = targetRotationalPower;
+
     }
 
     public void setStates(SwerveModuleState[] targetStates) {
