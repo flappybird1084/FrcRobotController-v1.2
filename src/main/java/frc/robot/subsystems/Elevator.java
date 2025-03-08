@@ -96,6 +96,11 @@ public class Elevator extends SubsystemBase {
         this.power *= slowdownFactor;
     }
 
+    if(Math.abs(power) < 0.02){
+        this.power *= 2;
+    }
+
+
     // Set the motor outputs with the adjusted power
     elevatorNeo1.set(this.power);
     elevatorNeo2.set(this.power);

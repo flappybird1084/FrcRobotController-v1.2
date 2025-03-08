@@ -139,8 +139,8 @@ public class Drive extends SubsystemBase{
         // targetRotationalRate = yawPIDController.calculate(currentAngle);
         if(Math.abs(joystick.getRightX()) < 0.1){
             targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle, 0.01);
-
         }
+        // if(Math.abs(joystick.getRightX()) < 0.03){targetRotationalRate=0;}
         else{
         targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle);
         }

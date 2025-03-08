@@ -25,7 +25,8 @@ public class Robot extends TimedRobot {
   public static Elevator elevator = new Elevator();
   public static MessageListener messageListener = new MessageListener();
   public static Drive drive = new Drive();
-  // public static Intake intake = new Intake();
+  public static Intake intake = new Intake();
+  // public static Hang hang = new Hang();
 
   public static boolean alternativeElevatorMode = false;
 
@@ -108,11 +109,13 @@ public class Robot extends TimedRobot {
       //add intake
     }
 
+    //hang.setpower...
+
     
 
-    // intake.setIntakePower(coJoystick.getRightY());
+    intake.setIntakePower(coJoystick.getRightY());
     // intake.setPitchPower(coJoystick.getLeftY());
-
+    intake.setPitchPowerLimited(coJoystick.getLeftY());
 
 
   }

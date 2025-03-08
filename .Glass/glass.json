@@ -47,6 +47,27 @@
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Dashboard@1": {
+      "Publishers": {
+        "open": true
+      },
+      "open": true
+    },
+    "Server": {
+      "open": true
+    },
+    "glass@2": {
+      "open": true
+    },
+    "visible": true
+  },
+  "NetworkTables Log": {
     "visible": true
   },
   "NetworkTables Settings": {
