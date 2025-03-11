@@ -22,10 +22,10 @@ public class Constants {
     public static final int INTAKE_NEO_PITCH_CAN_ID = 23;
     public static final int INTAKE_NEO_WHEEL_CAN_ID = 24; //TODO: implement
 
-    public static final int ALGAE_NEO_CAN_ID_1 = 26;
-    public static final int ALGAE_NEO_CAN_ID_2 = 27; 
+    public static final int ALGAE_NEO_CAN_ID_1 = 27;
+    public static final int ALGAE_NEO_CAN_ID_2 = 28; 
 
-    public static final int HANG_NEO_CAN_ID = 28;
+    public static final int HANG_NEO_CAN_ID = 29;
   
     public static final double JOYSTICK_YAW_MULTIPLIER = 4;
     public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-0.7;
@@ -39,9 +39,9 @@ public class Constants {
 
     public static final double JOYSTICK_CORAL_MULTIPLIER = -0.1;
     public static final double CORAL_PITCH_SPEED_LIMIT_OFFSET = 0.75;
-    public static final double CORAL_BOOST_STOP = 2.38;
-    public static final double MIN_CORAL_POSITION = 0.714;
-    public static final double MAX_CORAL_POSITION = 2.952;
+    public static final double CORAL_BOOST_STOP = 3.38;
+    public static final double MIN_CORAL_POSITION = 0;
+    public static final double MAX_CORAL_POSITION = 4.4;
 
     public static final double JOYSTICK_HANG_MULTIPLIER = -0.7;
     public static final double HANG_SPEED_LIMIT_OFFSET = 0.6;

@@ -18,6 +18,12 @@ public class Intake extends SubsystemBase{
         intakeMotor = Constants.intakeNeoWheel;
         algaeIntake1 = Constants.algaeNeo1;
         algaeIntake2 = Constants.algaeNeo2;
+
+        System.out.println("resetting pitch motor encoder");
+    }
+
+    public void resetEncoderToValue(double value){
+        pitchMotor.getEncoder().setPosition(value);
     }
 
     public void setPitchPower(double power){
@@ -47,7 +53,7 @@ public class Intake extends SubsystemBase{
             power += (maxPosition-getPosition())/maxPosition * -0.5;
             // System.out.println(power);
         }
-        
+
         // Adjust power based on joystick multiplier constant
         // power *= Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
         power *= Constants.JOYSTICK_CORAL_MULTIPLIER;

@@ -104,19 +104,40 @@ public class Robot extends TimedRobot {
       System.out.println("elevator offset reset");
     }
 
-    if(coJoystick.getHID().getBButtonPressed()){ //preset for coral processor
-      elevator.setPosition(-2.0);
+    if(coJoystick.getHID().getBButton()){ //preset for coral processor
+      elevator.setPosition(-0.85);
       //add intake
+    }
+    
+
+    if(coJoystick.getHID().getBackButton()){
+      intake.resetEncoderToValue(Constants.MIN_CORAL_POSITION);
+    }
+
+    if(coJoystick.getHID().getStartButton()){
+      intake.resetEncoderToValue(Constants.MAX_CORAL_POSITION);
     }
 
     //hang.setpower...
 
     
 
-    intake.setIntakePower(coJoystick.getRightY());
+    intake.setIntakePower(-coJoystick.getRightY()*0.25);
     // intake.setPitchPower(coJoystick.getLeftY());
     intake.setPitchPowerLimited(coJoystick.getLeftY());
+    
 
+    if(coJoystick.getHID().getAButton()){
+      intake.setAlgaePower(1);
+    }
+
+    else if(coJoystick.getHID().getXButton()){
+      intake.setAlgaePower(-1);
+    }
+
+    else{
+      intake.setAlgaePower(0);
+    }
 
   }
 
