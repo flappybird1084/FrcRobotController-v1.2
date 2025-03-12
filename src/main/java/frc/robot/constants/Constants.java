@@ -45,6 +45,9 @@ public class Constants {
 
     public static final double JOYSTICK_HANG_MULTIPLIER = -0.7;
     public static final double HANG_SPEED_LIMIT_OFFSET = 0.6;
+    public static final double MIN_HANG_POSITION = -62.358;
+    public static final double MAX_HANG_POSITION = 38.714;
+
   
     public static final int IP_ADDRESS_LISTEN_PORT = 1234;
     public static final String LISTEN_IP_ADDRESS = "0.0.0.0";

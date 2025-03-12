@@ -20,11 +20,13 @@ public class Hang extends SubsystemBase{
         return hangMotor.getEncoder().getPosition();
     }
 
-    public void setPowerLimited(double power, double maxPosition, double minPosition) {
+    public void setPitchPowerLimited(double power) {
+        // negative power = up
+        double maxPosition = Constants.MAX_CORAL_POSITION;
+        double minPosition = Constants.MIN_CORAL_POSITION;
+
         // Ensure minimal movement when power input is zero
-        if (power == 0){
-            power = 0.02;
-        }
+
         // Adjust power based on joystick multiplier constant
         // power *= Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
         power *= Constants.JOYSTICK_HANG_MULTIPLIER;
@@ -33,16 +35,16 @@ public class Hang extends SubsystemBase{
         double currentPosition = getPosition();
         
         // Enforce absolute positional limits
-        if (power < 0 && currentPosition <= maxPosition) {
+        if (power > 0 && currentPosition >= maxPosition) {
             power = 0;
         }
-        if (power > 0 && currentPosition >= minPosition) {
+        if (power < 0 && currentPosition <= minPosition) {
             power = 0;
         }
     
         // Proportional Slowdown Near Maximum Position (Upward Movement)
-        if (power < 0 && currentPosition < (maxPosition + Constants.HANG_SPEED_LIMIT_OFFSET)) {
-            double distanceToMax = currentPosition - maxPosition;
+        if (power > 0 && currentPosition > (maxPosition - Constants.HANG_SPEED_LIMIT_OFFSET)) {
+            double distanceToMax = maxPosition-currentPosition;
             // Calculate slowdown factor (clamped between 0 and 1)
             double slowdownFactor = Math.max(0.0, distanceToMax / Constants.HANG_SPEED_LIMIT_OFFSET);
             // Apply the slowdown factor to the motor power
@@ -50,15 +52,17 @@ public class Hang extends SubsystemBase{
         }
     
         // Proportional Slowdown Near Minimum Position (Downward Movement)
-        if (power > 0 && currentPosition > (minPosition - Constants.HANG_SPEED_LIMIT_OFFSET)) {
-            double distanceToMin = minPosition - currentPosition;
+        if (power < 0 && currentPosition < (minPosition + Constants.HANG_SPEED_LIMIT_OFFSET)) {
+            double distanceToMin = currentPosition - minPosition;
             // Calculate slowdown factor (clamped between 0 and 1)
-            double slowdownFactor = Math.max(0.0, distanceToMin / Constants.HANG_SPEED_LIMIT_OFFSET);
+            double slowdownFactor = Math.max(0.0, distanceToMin / Constants.HANG_SPEED_LIMIT_OFFSET) * (1+5*power); //when power is too high the slowdown hits like a slap to the face
             // Apply the slowdown factor to the motor power
-            power *= slowdownFactor;
+            power *= -slowdownFactor;
         }
-
+    
+        // Set the motor output with the adjusted power (only one motor)
         hangMotor.set(power);
     }
+
 
 }

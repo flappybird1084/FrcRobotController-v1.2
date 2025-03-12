@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   public static MessageListener messageListener = new MessageListener();
   public static Drive drive = new Drive();
   public static Intake intake = new Intake();
-  // public static Hang hang = new Hang();
+  public static Hang hang = new Hang();
 
   public static boolean alternativeElevatorMode = false;
 
@@ -138,6 +138,8 @@ public class Robot extends TimedRobot {
     else{
       intake.setAlgaePower(0);
     }
+
+    hang.setPower(joystick.getLeftTriggerAxis()-joystick.getRightTriggerAxis());
 
   }
 

@@ -98,7 +98,7 @@ public class Elevator extends SubsystemBase {
 
     if(Math.abs(power) < 0.02){
         this.power *= 2;
-    } else if (getPosition() > -2.75) {
+    } else if (getPosition() < -2.75) {
         this.power *= 2.5;
     } 
 

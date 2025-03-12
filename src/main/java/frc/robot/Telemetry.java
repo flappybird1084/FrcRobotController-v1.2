@@ -100,7 +100,7 @@ public class Telemetry {
         SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
         SmartDashboard.putNumber("Elevator Offset", Robot.elevator.elevatorOffset);
         SmartDashboard.putNumber("Coral Pitch Position", Robot.intake.getPosition());
-        // SmartDashboard.putNumber("Hang Position", Robot.hang.getPosition());
+        SmartDashboard.putNumber("Hang Position", Robot.hang.getPosition());
     
 
         /* Also write to log file */
