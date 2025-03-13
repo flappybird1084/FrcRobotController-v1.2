@@ -22,8 +22,8 @@ public class Hang extends SubsystemBase{
 
     public void setPitchPowerLimited(double power) {
         // negative power = up
-        double maxPosition = Constants.MAX_CORAL_POSITION;
-        double minPosition = Constants.MIN_CORAL_POSITION;
+        double maxPosition = Constants.MAX_HANG_POSITION;
+        double minPosition = Constants.MIN_HANG_POSITION;
 
         // Ensure minimal movement when power input is zero
 

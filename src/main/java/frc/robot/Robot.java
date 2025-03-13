@@ -99,16 +99,10 @@ public class Robot extends TimedRobot {
     drive.drive(joystick);
     elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
-    if(coJoystick.getHID().getBackButtonPressed()){
-      elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
-      System.out.println("elevator offset reset");
-    }
-
-    if(coJoystick.getHID().getBButton()){ //preset for coral processor
-      elevator.setPosition(-0.85);
-      //add intake
-    }
-    
+    // if(coJoystick.getHID().getBackButtonPressed()){
+    //   elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
+    //   System.out.println("elevator offset reset");
+    // }
 
     if(coJoystick.getHID().getBackButton()){
       intake.resetEncoderToValue(Constants.MIN_CORAL_POSITION);
@@ -119,8 +113,6 @@ public class Robot extends TimedRobot {
     }
 
     //hang.setpower...
-
-    
 
     intake.setIntakePower(-coJoystick.getRightY()*0.25);
     // intake.setPitchPower(coJoystick.getLeftY());
@@ -141,6 +133,24 @@ public class Robot extends TimedRobot {
 
     hang.setPower(joystick.getLeftTriggerAxis()-joystick.getRightTriggerAxis());
 
+    if(coJoystick.getHID().getBButton()){ //preset for coral processor
+      elevator.setPosition(-0.48);
+      // intake.setIntakePower(-0.25);
+      intake.setPitchPosition(4.2);
+      if(elevator.getPosition()>-0.55){
+        intake.setIntakePower(-0.25);
+      }
+      
+    }
+    if(coJoystick.getHID().getYButton()){ //preset for L3
+      elevator.setPosition(-2.25);
+      // intake.setIntakePower(0.15);
+      intake.setPitchPosition(1.4);
+      if(elevator.getPosition()<-2.0){
+        intake.setIntakePower(0.07);
+      }
+      
+    }
   }
 
   @Override

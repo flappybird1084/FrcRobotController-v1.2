@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
@@ -12,12 +13,14 @@ public class Intake extends SubsystemBase{
     private final SparkMax algaeIntake1;
     private final SparkMax algaeIntake2;
 
-
+    private PIDController pitchPidController;
     public Intake(){
         pitchMotor = Constants.intakeNeoPitch;
         intakeMotor = Constants.intakeNeoWheel;
         algaeIntake1 = Constants.algaeNeo1;
         algaeIntake2 = Constants.algaeNeo2;
+        pitchPidController = Constants.intakePidController;
+
 
         System.out.println("resetting pitch motor encoder");
     }
@@ -41,6 +44,21 @@ public class Intake extends SubsystemBase{
 
     public double getPosition(){
         return pitchMotor.getEncoder().getPosition();
+    }
+
+    public void setPitchPosition(double position){
+        // position *= Constants.ELEVATOR_SETPOINT_CONSTANT;
+        
+        if(position > Constants.MAX_CORAL_POSITION)
+        position = Constants.MAX_CORAL_POSITION;
+
+        if(position < Constants.MIN_CORAL_POSITION)
+        position = Constants.MIN_CORAL_POSITION;
+
+        double error = pitchPidController.calculate(this.getPosition(), (position));
+
+        // this.power = Math.min(error, 0.5); // Slow down the motor to prevent overshooting
+        pitchMotor.set(error);
     }
 
     public void setPitchPowerLimited(double power) {

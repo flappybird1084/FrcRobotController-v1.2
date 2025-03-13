@@ -115,6 +115,10 @@ public class Constants {
         //Elevator
         public static PIDController elevatorPidController = new PIDController(1, 0, 0); // PID Controller for Elevator
 
+        //Intake
+        public static PIDController intakePidController = new PIDController(0.12, 0.0, 0.0); // PID Controller for Intake
+
+
 
 
 
