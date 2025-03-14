@@ -125,7 +125,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // return Commands.print("No autonomous command configured");
+        return Commands.print("No autonomous command configured");
         // return new PathPlannerAuto("New Auto");
             // Define the start pose, interior waypoints, and end pose
         /*
@@ -142,7 +142,7 @@ public class RobotContainer {
         // Create and return the command to follow the trajectory
         return new FollowPathCommand(trajectory, driveSubsystem);
         */
-        return new PathPlannerAuto("New Auto");
+        // return new PathPlannerAuto("New Auto");
     
     
     }
