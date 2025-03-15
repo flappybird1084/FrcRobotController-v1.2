@@ -19,6 +19,9 @@ import edu.wpi.first.math.proto.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.ElevatorMoveCommand;
@@ -126,6 +129,32 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
+        // return new InstantCommand(()->{
+        //     // double startTime = System.currentTimeMillis();
+        //     // while(System.currentTimeMillis()-3000 < startTime){
+        //     //     System.out.println("about to apply sysid");
+        //     //     drivetrain.sysIdDynamic(Direction.kForward);
+        //     // }
+        //     // drivetrain.applyRequest(()->brake);
+        //     drivetrain.sysIdDynamic(Direction.kForward);
+        // });
+
+        // boolean doAuto = true;
+
+        // if(true){
+        // return new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         drivetrain.sysIdDynamic(Direction.kForward); // Start moving forward
+        //     }),
+        //     new WaitCommand(2), // Wait for 3 seconds
+        //     new InstantCommand(() -> {
+        //         drivetrain.applyRequest(() -> brake); // Apply brake after waiting
+        //     })
+        // );}
+        // else{
+            // return Commands.print("No autonomous command configured");
+        // }
+        // return Commands.print("No autonomous command configured");
         // return new PathPlannerAuto("New Auto");
             // Define the start pose, interior waypoints, and end pose
         /*

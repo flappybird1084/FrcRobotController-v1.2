@@ -22,11 +22,13 @@ public class Robot extends TimedRobot {
   public static final CommandXboxController joystick = new CommandXboxController(Constants.driverJoystickPort);
   public static final CommandXboxController coJoystick = new CommandXboxController(Constants.coDriverJoystickPort);
 
-  public static Elevator elevator = new Elevator();
+  // public static Elevator elevator = new Elevator();
   public static MessageListener messageListener = new MessageListener();
   public static Drive drive = new Drive();
-  public static Intake intake = new Intake();
+  // public static Intake intake = new Intake();
   public static Hang hang = new Hang();
+
+  double startTime;
 
   public static boolean alternativeElevatorMode = false;
 
@@ -73,10 +75,12 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
 
+    
   }
 
   @Override
   public void autonomousPeriodic() { 
+
 }
 
   @Override
@@ -97,60 +101,65 @@ public class Robot extends TimedRobot {
     // m_robotContainer.setMaxSpeed(m_robotContainer.originalMaxSpeed * Math.max((1-elevator.getPercentageUp()), 0.1));
 
     drive.drive(joystick);
-    elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
+    // elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
-    // if(coJoystick.getHID().getBackButtonPressed()){
-    //   elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
-    //   System.out.println("elevator offset reset");
-    // }
+    // // if(coJoystick.getHID().getBackButtonPressed()){
+    // //   elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
+    // //   System.out.println("elevator offset reset");
+    // // }
 
-    if(coJoystick.getHID().getBackButton()){
-      intake.resetEncoderToValue(Constants.MIN_CORAL_POSITION);
-    }
+    // //TODO: REPLACE WHEN WE GET BACK
+    // // if(coJoystick.getHID().getBackButton()){
+    // //   intake.resetEncoderToValue(Constants.MIN_CORAL_POSITION);
+    // // }
 
-    if(coJoystick.getHID().getStartButton()){
-      intake.resetEncoderToValue(Constants.MAX_CORAL_POSITION);
-    }
+    // // if(coJoystick.getHID().getStartButton()){
+    // //   intake.resetEncoderToValue(Constants.MAX_CORAL_POSITION);
+    // // }
 
-    //hang.setpower...
+    // //hang.setpower...
 
-    intake.setIntakePower(-coJoystick.getRightY()*0.25);
+    // intake.setIntakePower(-coJoystick.getRightY()*0.25);
     // intake.setPitchPower(coJoystick.getLeftY());
-    intake.setPitchPowerLimited(coJoystick.getLeftY());
+    // // intake.setPitchPowerLimited(coJoystick.getLeftY());
     
 
-    if(coJoystick.getHID().getAButton()){
-      intake.setAlgaePower(1);
-    }
+    // if(coJoystick.getHID().getAButton()){
+    //   intake.setAlgaePower(1);
+    // }
 
-    else if(coJoystick.getHID().getXButton()){
-      intake.setAlgaePower(-1);
-    }
+    // else if(coJoystick.getHID().getXButton()){
+    //   intake.setAlgaePower(-1);
+    // }
 
-    else{
-      intake.setAlgaePower(0);
-    }
+    // else{
+    //   intake.setAlgaePower(0);
+    // }
 
-    hang.setPower(joystick.getLeftTriggerAxis()-joystick.getRightTriggerAxis());
+    // hang.setPower(joystick.getLeftTriggerAxis()-joystick.getRightTriggerAxis());
+    hang.setPower(coJoystick.getLeftTriggerAxis()-coJoystick.getRightTriggerAxis());
 
-    if(coJoystick.getHID().getBButton()){ //preset for coral processor
-      elevator.setPosition(-0.48);
-      // intake.setIntakePower(-0.25);
-      intake.setPitchPosition(4.2);
-      if(elevator.getPosition()>-0.55){
-        intake.setIntakePower(-0.25);
-      }
+
+    //TODO: MUST RECALIBRATE WHEN WE GET BACK
+    // if(coJoystick.getHID().getBButton()){ //preset for coral processor
+    //   elevator.setPosition(-0.48);
+    //   // intake.setIntakePower(-0.25);
+    //   intake.setPitchPosition(4.2);
+    //   if(elevator.getPosition()>-0.55){
+    //     intake.setIntakePower(-0.25);
+    //   }
       
-    }
-    if(coJoystick.getHID().getYButton()){ //preset for L3
-      elevator.setPosition(-2.25);
-      // intake.setIntakePower(0.15);
-      intake.setPitchPosition(1.4);
-      if(elevator.getPosition()<-2.0){
-        intake.setIntakePower(0.07);
-      }
+    // }
+    // if(coJoystick.getHID().getYButton()){ //preset for L3
+    //   elevator.setPosition(-2.25);
+    //   // intake.setIntakePower(0.15);
+    //   intake.setPitchPosition(1.4);
+    //   if(elevator.getPosition()<-2.0){
+    //     intake.setIntakePower(0.07);
+    //   }
+
       
-    }
+    
   }
 
   @Override
