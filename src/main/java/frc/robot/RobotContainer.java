@@ -134,8 +134,27 @@ public class RobotContainer {
     // // For SparkMax
     // // Command sparkMaxCommand = Autos.exampleAuto(m_exampleDrivetrain.m_SparkMax);
 
-    // return talonFXCommand;
-        return Commands.print("No autonomous command configured");
+    // return talonFXCommand;   
+    
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                // TODO: This maybe is off by 180?
+                drivetrain.resetRotation(drivetrain.getOperatorForwardDirection());
+            }),    
+        drivetrain.applyRequest(
+                () ->
+                // TODO: Might be going wrong way
+                    drive.withVelocityX(-0.5*MaxSpeed) // Drive forward with negative Y (forward)
+                        .withVelocityY(0) // Drive left with negative X (left)
+                        .withRotationalRate(0))
+                            .withTimeout(3)
+                                .andThen(
+                                    ()->
+                                        drive.withVelocityX(0) // Drive forward with negative Y (forward)
+                                            .withVelocityY(0) // Drive left with negative X (left)
+                                            .withRotationalRate(0)));
+
+
         // return new InstantCommand(()->{
         //     // double startTime = System.currentTimeMillis();
         //     // while(System.currentTimeMillis()-3000 < startTime){
