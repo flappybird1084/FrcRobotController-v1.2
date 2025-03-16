@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import java.util.List;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.Autos;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.FollowPathCommand;
 import frc.robot.commands.JoystickDriveCommand;
@@ -128,6 +130,11 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+    //     Command talonFXCommand = Autos.exampleAuto(new TalonFX[]{drivetrain.getModule(0).getDriveMotor(), drivetrain.getModule(1).getDriveMotor(),drivetrain.getModule(2).getDriveMotor(), drivetrain.getModule(4).getDriveMotor()});
+    // // For SparkMax
+    // // Command sparkMaxCommand = Autos.exampleAuto(m_exampleDrivetrain.m_SparkMax);
+
+    // return talonFXCommand;
         return Commands.print("No autonomous command configured");
         // return new InstantCommand(()->{
         //     // double startTime = System.currentTimeMillis();
