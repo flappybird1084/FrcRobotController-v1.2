@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
@@ -47,8 +49,9 @@ public class Drive extends SubsystemBase{
     private final double MAX_DELTA = 0.05; // Max joystick change (to prevent sudden acc)
 
     CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
-    
+    public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
+    .withDeadband(RobotContainer.MaxSpeed * 0.04)
+    .withRotationalDeadband(RobotContainer.MaxAngularRate * 0.04);
 
 
     public Drive() {
@@ -194,17 +197,37 @@ public class Drive extends SubsystemBase{
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
-        double targetPowerX = targetSpeeds.vxMetersPerSecond;
-        double targetPowerY = targetSpeeds.vyMetersPerSecond;
+        double targetPowerX = targetSpeeds.vxMetersPerSecond/RobotContainer.MaxSpeed;
+        double targetPowerY = targetSpeeds.vyMetersPerSecond/RobotContainer.MaxSpeed;
         double targetRotationalPower = targetSpeeds.omegaRadiansPerSecond;
         
         // SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
         // setStates(targetStates);
          // old, not working for us
 
-        RobotContainer.targetX = targetPowerX;
-        RobotContainer.targetY = targetPowerY;
-        RobotContainer.targetRotationalRate = targetRotationalPower;
+         System.out.println("targetPowerX: " + targetPowerX);
+         System.out.println("targetPowerY: " + targetPowerY);
+         System.out.println("targetRotationalPower: " + targetRotationalPower);
+
+        // RobotContainer.targetX = targetPowerX;
+        // RobotContainer.targetY = targetPowerY;
+        // RobotContainer.targetRotationalRate = targetRotationalPower;
+
+        // RobotContainer.drivetrain.applyRequest(() -> RobotContainer.drive
+        // .withVelocityX(targetPowerX*(0.2))
+        // .withVelocityY(targetPowerY*(0.2))
+        // .withRotationalRate(targetRotationalPower))
+        // // .withTimeout(0.2)
+        // .schedule();
+
+        RobotContainer.drivetrain.applyRequest(() -> driveRobotCentric
+        .withVelocityX(targetPowerX)
+        .withVelocityY(targetPowerY)
+        .withRotationalRate(targetRotationalPower))
+        // .withTimeout(0.2)
+        .schedule();
+
+
 
     }
 

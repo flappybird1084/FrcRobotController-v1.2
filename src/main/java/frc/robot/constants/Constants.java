@@ -52,14 +52,14 @@ public class Constants {
     public static final int IP_ADDRESS_LISTEN_PORT = 1234;
     public static final String LISTEN_IP_ADDRESS = "0.0.0.0";
 
-    // public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 0.3;
-    // public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.3;
+    public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 0.3;
+    public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.3;
 
     // public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 0.5;
     // public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.5;
 
-    public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 1.0;
-    public static final double JOYSTICK_LEFT_X_MULTIPLIER = 1.0;
+    // public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 1.0;
+    // public static final double JOYSTICK_LEFT_X_MULTIPLIER = 1.0;
 
     public static final int driverJoystickPort = 0;
     public static final int coDriverJoystickPort = 1;
@@ -114,8 +114,8 @@ public class Constants {
         //Drive
         // public static final PIDConstants translationConstants = new PIDConstants(5.0, 0.0, 0.0); //original p 5
         // public static final PIDConstants rotationConstants = new PIDConstants(5.0, 0.0, 0.0); //original p 5
-        public static final PIDConstants translationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
-        public static final PIDConstants rotationConstants = new PIDConstants(1.0, 0.0, 0.0); //original p 5
+        public static final PIDConstants translationConstants = new PIDConstants(5.0, 0.0, 0.0); //original p 5
+        public static final PIDConstants rotationConstants = new PIDConstants(5.0, 0.0, 0.0); //original p 5
 
 
         //Elevator

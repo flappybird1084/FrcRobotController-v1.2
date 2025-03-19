@@ -37,10 +37,10 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public final double originalMaxSpeed = MaxSpeed; // max speed for the robot
 
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private final double JOYSTICK_LEFT_Y_MULTIPLIER = Constants.JOYSTICK_LEFT_Y_MULTIPLIER;
     private final double JOYSTICK_LEFT_X_MULTIPLIER = Constants.JOYSTICK_LEFT_X_MULTIPLIER;
@@ -52,7 +52,7 @@ public class RobotContainer {
     public static double targetY = 0.0;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
-    public final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    public static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.04).withRotationalDeadband(MaxAngularRate * 0.04 ) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -62,7 +62,7 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
 
     //Subsystems
@@ -88,7 +88,7 @@ public class RobotContainer {
         // driveSubsystem.setDefaultCommand(new JoystickDriveCommand(driveSubsystem, joystick));
         // elevatorSubsystem.setDefaultCommand(new ElevatorMoveCommand(elevatorSubsystem,joystick));
 
-        SmartDashboard.putData("Example Path", new PathPlannerAuto("New Auto"));
+        SmartDashboard.putData("Example Path", new PathPlannerAuto("squarish auto"));
 
 
         // Note that X is defined as forward according to WPILib convention,
@@ -130,76 +130,31 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-    //     Command talonFXCommand = Autos.exampleAuto(new TalonFX[]{drivetrain.getModule(0).getDriveMotor(), drivetrain.getModule(1).getDriveMotor(),drivetrain.getModule(2).getDriveMotor(), drivetrain.getModule(4).getDriveMotor()});
-    // // For SparkMax
-    // // Command sparkMaxCommand = Autos.exampleAuto(m_exampleDrivetrain.m_SparkMax);
 
-    // return talonFXCommand;   
     
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                // TODO: This maybe is off by 180?
-                drivetrain.resetRotation(drivetrain.getOperatorForwardDirection());
-            }),    
-        drivetrain.applyRequest(
-                () ->
-                // TODO: Might be going wrong way
-                    drive.withVelocityX(-0.5*MaxSpeed) // Drive forward with negative Y (forward)
-                        .withVelocityY(0) // Drive left with negative X (left)
-                        .withRotationalRate(0))
-                            .withTimeout(3)
-                                .andThen(
-                                    ()->
-                                        drive.withVelocityX(0) // Drive forward with negative Y (forward)
-                                            .withVelocityY(0) // Drive left with negative X (left)
-                                            .withRotationalRate(0)));
+        // return Commands.sequence(
+        //     Commands.runOnce(() -> {
+        //         // TODO: This maybe is off by 180?
+        //         drivetrain.resetRotation(drivetrain.getOperatorForwardDirection());
+        //     }),    
+        // drivetrain.applyRequest(
+        //         () ->
+        //         // TODO: Might be going wrong way
+        //             drive.withVelocityX(-0.5*MaxSpeed) // Drive forward with negative Y (forward)
+        //                 .withVelocityY(0) // Drive left with negative X (left)
+        //                 .withRotationalRate(0))
+        //                     .withTimeout(3)
+        //                         .andThen(
+        //                             ()->
+        //                                 drive.withVelocityX(0) // Drive forward with negative Y (forward)
+        //                                     .withVelocityY(0) // Drive left with negative X (left)
+        //                                     .withRotationalRate(0)));
 
-
-        // return new InstantCommand(()->{
-        //     // double startTime = System.currentTimeMillis();
-        //     // while(System.currentTimeMillis()-3000 < startTime){
-        //     //     System.out.println("about to apply sysid");
-        //     //     drivetrain.sysIdDynamic(Direction.kForward);
-        //     // }
-        //     // drivetrain.applyRequest(()->brake);
-        //     drivetrain.sysIdDynamic(Direction.kForward);
-        // });
-
-        // boolean doAuto = true;
-
-        // if(true){
-        // return new SequentialCommandGroup(
-        //     new InstantCommand(() -> {
-        //         drivetrain.sysIdDynamic(Direction.kForward); // Start moving forward
-        //     }),
-        //     new WaitCommand(2), // Wait for 3 seconds
-        //     new InstantCommand(() -> {
-        //         drivetrain.applyRequest(() -> brake); // Apply brake after waiting
-        //     })
-        // );}
-        // else{
             // return Commands.print("No autonomous command configured");
-        // }
-        // return Commands.print("No autonomous command configured");
-        // return new PathPlannerAuto("New Auto");
-            // Define the start pose, interior waypoints, and end pose
-        /*
-        Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
-        List<Translation2d> interiorWaypoints = List.of(
-                new Translation2d(1.0, 1.0),
-                new Translation2d(2.0, -1.0)
-        );
-        Pose2d endPose = new Pose2d(3.0, 0.0, new Rotation2d(0.0));
+            // return new PathPlannerAuto("New Auto");
+            return new PathPlannerAuto("squarish auto");
+            
 
-        // Generate the trajectory
-        edu.wpi.first.math.trajectory.Trajectory trajectory = CustomPathPlanner.generateTrajectory(startPose, interiorWaypoints, endPose, driveSubsystem);
-
-        // Create and return the command to follow the trajectory
-        return new FollowPathCommand(trajectory, driveSubsystem);
-        */
-        // return new PathPlannerAuto("New Auto");
-    
-    
     }
 
     // deprecated
