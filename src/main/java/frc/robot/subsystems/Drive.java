@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
+import frc.robot.util.AprilTagPIDReading;
 import frc.robot.util.ProportionalSlowdownController;
 
 public class Drive extends SubsystemBase{
@@ -260,6 +261,17 @@ public class Drive extends SubsystemBase{
 
   public SwerveDriveKinematics getKinematics() {
     return kinematics;
+  }
+
+  public void centerAprilTagWithPIDReading(AprilTagPIDReading pidReading){
+    double damper = 1;
+
+
+    drivetrain.applyRequest(() -> RobotContainer.drive
+    .withVelocityX(pidReading.getPidX()*damper*RobotContainer.MaxSpeed)
+    .withVelocityY(pidReading.getPidZ()*damper*RobotContainer.MaxSpeed)
+    .withRotationalRate(pidReading.getPidYaw()*RobotContainer.MaxAngularRate))
+    .schedule();
   }
 
 

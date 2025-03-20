@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.Constants;
+import frc.robot.deprecated.AprilTagDetectedMessageListener;
 import frc.robot.subsystems.*;
+import frc.robot.util.AprilTagPIDReading;
 public class Robot extends TimedRobot {
 
   public static boolean shouldDisableDrive = false;
@@ -100,7 +102,14 @@ public class Robot extends TimedRobot {
 
     // m_robotContainer.setMaxSpeed(m_robotContainer.originalMaxSpeed * Math.max((1-elevator.getPercentageUp()), 0.1));
 
-    drive.drive(joystick);
+    
+    if(joystick.getHID().getAButton() && messageListener.timeSinceLastMessage() < 1000){
+      drive.centerAprilTagWithPIDReading(messageListener.getAprilTagPIDReading());
+    }
+    else{
+      drive.drive(joystick);
+
+    }
     // elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
     // // if(coJoystick.getHID().getBackButtonPressed()){

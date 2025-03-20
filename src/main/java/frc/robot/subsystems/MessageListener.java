@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.util.AprilTagDetected;
+import frc.robot.util.AprilTagPIDReading;
 
 public class MessageListener extends SubsystemBase {
 
@@ -16,7 +17,9 @@ public class MessageListener extends SubsystemBase {
 
     // Use volatile for variables accessed by multiple threads
     private volatile String lastMessage = "No messages to display";
-    private volatile ArrayList<AprilTagDetected> currentDetectedAprilTags = new ArrayList<>();
+    private volatile AprilTagPIDReading aprilTagPIDReading;
+    private double timeOfLastMessage = System.currentTimeMillis();
+
 
     private DatagramSocket socket;
     private byte[] receiveData;
@@ -27,7 +30,7 @@ public class MessageListener extends SubsystemBase {
             // Initialize the socket and buffer
             socket = new DatagramSocket(port, InetAddress.getByName(ipAddress));
             System.out.println("Listening for packets on IP: " + ipAddress + ", Port: " + port);
-            receiveData = new byte[16384]; // Buffer to hold incoming data
+            receiveData = new byte[512]; // Buffer to hold incoming data
             packet = new DatagramPacket(receiveData, receiveData.length);
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,17 +51,9 @@ public class MessageListener extends SubsystemBase {
                         lastMessage = receivedMessage;
 
                         // Update currentDetectedAprilTags
-                        String[] split_strings = lastMessage.split("-next-detection-");
-                        ArrayList<AprilTagDetected> tags = new ArrayList<>();
-                        for (String tag : split_strings) {
-                            try {
-                                tags.add(AprilTagDetected.parseTag(tag));
-                                System.out.println("tag id: " + AprilTagDetected.parseTag(tag).getTagId());
-                            } catch (Exception e) {
-                                // Handle exception if needed
-                            }
-                        }
-                        currentDetectedAprilTags = tags;
+                        aprilTagPIDReading = AprilTagPIDReading.decompress(lastMessage);
+                        timeOfLastMessage = System.currentTimeMillis();
+
                     }
                 }
             } catch (Exception e) {
@@ -82,10 +77,15 @@ public class MessageListener extends SubsystemBase {
         }
     }
 
-    public ArrayList<AprilTagDetected> getCurrentDetectedAprilTags() {
+    public AprilTagPIDReading getAprilTagPIDReading() {
         synchronized (this) {
-            // Return a copy to prevent concurrent modification
-            return new ArrayList<>(currentDetectedAprilTags);
+            return aprilTagPIDReading;
         }
     }
+
+
+    public double timeSinceLastMessage(){
+        return System.currentTimeMillis()-timeOfLastMessage;
+    }
+    
 }
