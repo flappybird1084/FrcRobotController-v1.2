@@ -32,6 +32,13 @@ public class Robot extends TimedRobot {
 
   double startTime;
 
+  @Override
+  public boolean isDisabled() {
+    return super.isDisabled() || shouldDisableDrive;
+
+
+  }
+
   public static boolean alternativeElevatorMode = false;
 
 
@@ -103,7 +110,8 @@ public class Robot extends TimedRobot {
     // m_robotContainer.setMaxSpeed(m_robotContainer.originalMaxSpeed * Math.max((1-elevator.getPercentageUp()), 0.1));
 
     
-    if(joystick.getHID().getAButton() && messageListener.timeSinceLastMessage() < 1000){
+    if(joystick.getHID().getYButton() && messageListener.timeSinceLastMessage() < 1000){
+      System.out.println("Running AprilTag with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
       drive.centerAprilTagWithPIDReading(messageListener.getAprilTagPIDReading());
     }
     else{

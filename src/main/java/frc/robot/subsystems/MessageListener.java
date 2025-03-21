@@ -42,16 +42,16 @@ public class MessageListener extends SubsystemBase {
                 while (true) {
                     // Receive a packet (this call blocks until a packet is received)
                     socket.receive(packet);
+                    //System.out.println("Received packet: " + packet.getLength());
 
                     // Extract the packet data
-                    String receivedMessage = new String(packet.getData(), 0, packet.getLength());
+                    
 
                     // Synchronize updates to shared resources
                     synchronized (this) {
-                        lastMessage = receivedMessage;
 
                         // Update currentDetectedAprilTags
-                        aprilTagPIDReading = AprilTagPIDReading.decompress(lastMessage);
+                        aprilTagPIDReading = AprilTagPIDReading.decompress(packet);
                         timeOfLastMessage = System.currentTimeMillis();
 
                     }

@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -8,17 +10,23 @@ import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,7 +57,7 @@ public class Drive extends SubsystemBase{
     private double limitedTargetY = 0.0;
     private final double MAX_DELTA = 0.05; // Max joystick change (to prevent sudden acc)
 
-    CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    private CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
     .withDeadband(RobotContainer.MaxSpeed * 0.04)
     .withRotationalDeadband(RobotContainer.MaxAngularRate * 0.04);
@@ -264,15 +272,44 @@ public class Drive extends SubsystemBase{
   }
 
   public void centerAprilTagWithPIDReading(AprilTagPIDReading pidReading){
-    double damper = 1;
+    double damper = 0.5;
 
 
-    drivetrain.applyRequest(() -> RobotContainer.drive
-    .withVelocityX(pidReading.getPidX()*damper*RobotContainer.MaxSpeed)
-    .withVelocityY(pidReading.getPidZ()*damper*RobotContainer.MaxSpeed)
+    RobotContainer.drivetrain.applyRequest(() -> driveRobotCentric
+    .withVelocityX(pidReading.getPidZ()*damper*RobotContainer.MaxSpeed)
+    .withVelocityY(pidReading.getPidX()*damper*RobotContainer.MaxSpeed)
     .withRotationalRate(pidReading.getPidYaw()*RobotContainer.MaxAngularRate))
+    .withTimeout(0.02)
     .schedule();
   }
+
+  public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading){
+    double damper = 0.5;
+    double targetMetersX = aprilTagReading.getMetersX();
+    double targetMetersY = aprilTagReading.getMetersY();
+    
+    Pose2d currentPose = getPose();
+    Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
+    Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(targetMetersX, targetMetersY)), new Rotation2d());
+
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPos, endPos);
+      PathPlannerPath path = new PathPlannerPath(
+        waypoints, 
+        new PathConstraints(
+          4.0, 4.0, 
+          Units.degreesToRadians(360), Units.degreesToRadians(540)
+        ),
+        null, // Ideal starting state can be null for on-the-fly paths
+        new GoalEndState(0.0, currentPose.getRotation())
+      );
+
+      // Prevent this path from being flipped on the red alliance, since the given positions are already correct
+      path.preventFlipping = true;
+
+      AutoBuilder.followPath(path).schedule();
+    
+  }
+
 
 
   public void stop(){
