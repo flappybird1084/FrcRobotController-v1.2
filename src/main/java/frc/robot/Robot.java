@@ -114,6 +114,10 @@ public class Robot extends TimedRobot {
       System.out.println("Running AprilTag with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
       drive.centerAprilTagWithPIDReading(messageListener.getAprilTagPIDReading());
     }
+    if(joystick.getHID().getXButton() && messageListener.timeSinceLastMessage() < 1000){
+      System.out.println("Running AprilTag better with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
+      drive.centerAprilTagPathPlanner(messageListener.getAprilTagPIDReading());
+    }
     else{
       drive.drive(joystick);
 

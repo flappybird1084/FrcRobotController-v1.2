@@ -284,19 +284,19 @@ public class Drive extends SubsystemBase{
   }
 
   public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading){
-    double damper = 0.5;
+    double damper = 0.1;
     double targetMetersX = aprilTagReading.getMetersX();
     double targetMetersY = aprilTagReading.getMetersY();
     
     Pose2d currentPose = getPose();
     Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
-    Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(targetMetersX, targetMetersY)), new Rotation2d());
+    Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(targetMetersY, -targetMetersX)), new Rotation2d());
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPos, endPos);
       PathPlannerPath path = new PathPlannerPath(
         waypoints, 
         new PathConstraints(
-          4.0, 4.0, 
+          4.0*damper, 4.0, 
           Units.degreesToRadians(360), Units.degreesToRadians(540)
         ),
         null, // Ideal starting state can be null for on-the-fly paths
