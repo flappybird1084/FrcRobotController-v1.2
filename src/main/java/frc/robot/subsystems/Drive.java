@@ -283,32 +283,96 @@ public class Drive extends SubsystemBase{
     .schedule();
   }
 
-  public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading){
-    double damper = 0.1;
-    double targetMetersX = aprilTagReading.getMetersX();
-    double targetMetersY = aprilTagReading.getMetersY();
-    
-    Pose2d currentPose = getPose();
-    Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
-    Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(targetMetersY, -targetMetersX)), new Rotation2d());
 
+//   public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading){
+//     double damper = 0.1;
+//     double targetMetersX = aprilTagReading.getMetersX();
+//     double targetMetersY = aprilTagReading.getMetersY();
+    
+//     Pose2d currentPose = getPose();
+//     Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
+//     Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(targetMetersY, -targetMetersX)), new Rotation2d());
+
+//     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPos, endPos);
+//       PathPlannerPath path = new PathPlannerPath(
+//         waypoints, 
+//         new PathConstraints(
+//           4.0*damper, 4.0, 
+//           Units.degreesToRadians(360), Units.degreesToRadians(540)
+//         ),
+//         null, // Ideal starting state can be null for on-the-fly paths
+//         new GoalEndState(0.0, currentPose.getRotation())
+//       );
+
+//       // Prevent this path from being flipped on the red alliance, since the given positions are already correct
+//       path.preventFlipping = true;
+
+//       AutoBuilder.followPath(path).schedule();
+    
+//   }
+
+public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading) {
+    double damper = 0.1; 
+// Pull X and Y offsets from AprilTag
+    double targetMetersX = aprilTagReading.getMetersX();
+    double targetMetersY = aprilTagReading.getMetersY()*0.9;
+
+    // Get the tag's rotation in degrees (assume getTagRotation() returns degrees)
+    double targetRotation = -aprilTagReading.getTagRotation(); 
+    // Convert degrees -> Rotation2d
+    Rotation2d tagRotation2d = Rotation2d.fromDegrees(targetRotation);
+
+    // Get the robot’s current pose
+    Pose2d currentPose = getPose();
+    Rotation2d currentHeading = currentPose.getRotation();
+
+    // Build the offset in the robot's coordinate frame
+    Translation2d localOffset = new Translation2d(targetMetersY, -targetMetersX);
+
+    // Rotate that offset by the current heading to express it in field coordinates
+    Translation2d fieldOffset = localOffset.rotateBy(currentHeading);
+
+    // Start pose uses the robot’s current heading
+    Pose2d startPos = new Pose2d(
+        currentPose.getTranslation(),
+        currentHeading
+    );
+
+    // END POSE: You can decide how to use the rotation:
+    //
+    // Option 1: COMPLETELY replace the heading with the AprilTag heading (absolute).
+    // Rotation2d endHeading = tagRotation2d;
+    //
+    // Option 2: Add the AprilTag heading to the current heading (relative).
+    Rotation2d endHeading = currentHeading.plus(tagRotation2d);
+
+    // Create the end pose
+    Pose2d endPos = new Pose2d(
+        currentPose.getTranslation().plus(fieldOffset),
+        endHeading
+    );
+
+    // Generate the path
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPos, endPos);
-      PathPlannerPath path = new PathPlannerPath(
-        waypoints, 
+    PathPlannerPath path = new PathPlannerPath(
+        waypoints,
         new PathConstraints(
-          4.0*damper, 4.0, 
-          Units.degreesToRadians(360), Units.degreesToRadians(540)
+            4.0 * damper, 
+            4.0,
+            Units.degreesToRadians(360), 
+            Units.degreesToRadians(540)
         ),
         null, // Ideal starting state can be null for on-the-fly paths
-        new GoalEndState(0.0, currentPose.getRotation())
-      );
+        new GoalEndState(0.0, endHeading) // Final heading matches endPos heading
+    );
 
-      // Prevent this path from being flipped on the red alliance, since the given positions are already correct
-      path.preventFlipping = true;
+    // Prevent flipping if your path coordinates are already correctly oriented
+        path.preventFlipping = true;
 
-      AutoBuilder.followPath(path).schedule();
-    
-  }
+    // Follow the path
+        AutoBuilder.followPath(path).schedule();
+
+} 
 
 
 

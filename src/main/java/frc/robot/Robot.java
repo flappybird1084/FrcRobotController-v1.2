@@ -110,17 +110,16 @@ public class Robot extends TimedRobot {
     // m_robotContainer.setMaxSpeed(m_robotContainer.originalMaxSpeed * Math.max((1-elevator.getPercentageUp()), 0.1));
 
     
-    if(joystick.getHID().getYButton() && messageListener.timeSinceLastMessage() < 1000){
-      System.out.println("Running AprilTag with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
-      drive.centerAprilTagWithPIDReading(messageListener.getAprilTagPIDReading());
-    }
-    if(joystick.getHID().getXButton() && messageListener.timeSinceLastMessage() < 1000){
+    // if(joystick.getHID().getYButton() && messageListener.timeSinceLastMessage() < 1000){
+    //   System.out.println("Running AprilTag with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
+    //   drive.centerAprilTagWithPIDReading(messageListener.getAprilTagPIDReading());
+    // }
+    if(joystick.getHID().getXButtonPressed() && messageListener.timeSinceLastMessage() < 1000){
       System.out.println("Running AprilTag better with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
       drive.centerAprilTagPathPlanner(messageListener.getAprilTagPIDReading());
     }
     else{
       drive.drive(joystick);
-
     }
     // elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
