@@ -30,8 +30,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
@@ -311,70 +313,122 @@ public class Drive extends SubsystemBase{
     
 //   }
 
-public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading) {
-    double damper = 0.1; 
-// Pull X and Y offsets from AprilTag
-    double targetMetersX = aprilTagReading.getMetersX();
-    double targetMetersY = aprilTagReading.getMetersY()*0.9;
+    public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading) {
+        double damper = 0.1; 
+    // Pull X and Y offsets from AprilTag
+        double targetMetersX = aprilTagReading.getMetersX();
+        double targetMetersY = aprilTagReading.getMetersY()*0.9;
 
-    // Get the tag's rotation in degrees (assume getTagRotation() returns degrees)
-    double targetRotation = -aprilTagReading.getTagRotation(); 
-    // Convert degrees -> Rotation2d
-    Rotation2d tagRotation2d = Rotation2d.fromDegrees(targetRotation);
+        // Get the tag's rotation in degrees (assume getTagRotation() returns degrees)
+        double targetRotation = -aprilTagReading.getTagRotation(); 
+        // Convert degrees -> Rotation2d
+        Rotation2d tagRotation2d = Rotation2d.fromDegrees(targetRotation);
 
-    // Get the robot’s current pose
-    Pose2d currentPose = getPose();
-    Rotation2d currentHeading = currentPose.getRotation();
+        // Get the robot’s current pose
+        Pose2d currentPose = getPose();
+        Rotation2d currentHeading = currentPose.getRotation();
 
-    // Build the offset in the robot's coordinate frame
-    Translation2d localOffset = new Translation2d(targetMetersY, -targetMetersX);
+        // Build the offset in the robot's coordinate frame
+        Translation2d localOffset = new Translation2d(targetMetersY, -targetMetersX);
 
-    // Rotate that offset by the current heading to express it in field coordinates
-    Translation2d fieldOffset = localOffset.rotateBy(currentHeading);
+        // Rotate that offset by the current heading to express it in field coordinates
+        Translation2d fieldOffset = localOffset.rotateBy(currentHeading);
 
-    // Start pose uses the robot’s current heading
-    Pose2d startPos = new Pose2d(
-        currentPose.getTranslation(),
-        currentHeading
-    );
+        // Start pose uses the robot’s current heading
+        Pose2d startPos = new Pose2d(
+            currentPose.getTranslation(),
+            currentHeading
+        );
 
-    // END POSE: You can decide how to use the rotation:
-    //
-    // Option 1: COMPLETELY replace the heading with the AprilTag heading (absolute).
-    // Rotation2d endHeading = tagRotation2d;
-    //
-    // Option 2: Add the AprilTag heading to the current heading (relative).
-    Rotation2d endHeading = currentHeading.plus(tagRotation2d);
+        // END POSE: You can decide how to use the rotation:
+        //
+        // Option 1: COMPLETELY replace the heading with the AprilTag heading (absolute).
+        // Rotation2d endHeading = tagRotation2d;
+        //
+        // Option 2: Add the AprilTag heading to the current heading (relative).
+        Rotation2d endHeading = currentHeading.plus(tagRotation2d);
 
-    // Create the end pose
-    Pose2d endPos = new Pose2d(
-        currentPose.getTranslation().plus(fieldOffset),
-        endHeading
-    );
+        // Create the end pose
+        Pose2d endPos = new Pose2d(
+            currentPose.getTranslation().plus(fieldOffset),
+            endHeading
+        );
 
-    // Generate the path
-    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPos, endPos);
-    PathPlannerPath path = new PathPlannerPath(
-        waypoints,
-        new PathConstraints(
-            4.0 * damper, 
-            4.0,
-            Units.degreesToRadians(360), 
-            Units.degreesToRadians(540)
-        ),
-        null, // Ideal starting state can be null for on-the-fly paths
-        new GoalEndState(0.0, endHeading) // Final heading matches endPos heading
-    );
+        // Generate the path
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPos, endPos);
+        PathPlannerPath path = new PathPlannerPath(
+            waypoints,
+            new PathConstraints(
+                4.0 * damper, 
+                4.0,
+                Units.degreesToRadians(360), 
+                Units.degreesToRadians(540)
+            ),
+            null, // Ideal starting state can be null for on-the-fly paths
+            new GoalEndState(0.0, endHeading) // Final heading matches endPos heading
+        );
 
-    // Prevent flipping if your path coordinates are already correctly oriented
-        path.preventFlipping = true;
+        // Prevent flipping if your path coordinates are already correctly oriented
+            path.preventFlipping = true;
 
-    // Follow the path
-        AutoBuilder.followPath(path).schedule();
+        // Follow the path
+            AutoBuilder.followPath(path).schedule();
 
-} 
+    } 
 
+    // Run Path based on apriltags -> Take coordinates from April Tag to automatically make a path to make it easier.
+    public void tagToPath() {
+        AprilTagPIDReading aprilTagReading = Robot.messageListener.getAprilTagPIDReading();
 
+        if (aprilTagReading == null || Robot.messageListener.timeSinceLastMessage() > 1000) {
+            System.out.println("No recent AprilTag data available, cannot create path.");
+            return; 
+        }
+
+        double damper = 0.3; 
+        double targetMetersX = aprilTagReading.getMetersX(); 
+        double targetMetersY = aprilTagReading.getMetersY()*0.9;
+
+        double targetRotation = -aprilTagReading.getTagRotation();
+        Rotation2d tagRotation2d = Rotation2d.fromDegrees(targetRotation);
+
+        Pose2d currentPose = getPose();
+        Rotation2d currentHeading = currentPose.getRotation();
+
+        Translation2d approachOffsetLocal = new Translation2d(1.0, 0.0);
+
+        Translation2d approachOffsetField_relativeToTag = approachOffsetLocal.rotateBy(tagRotation2d);
+
+        Translation2d tagOffsetFromRobot_localRobotFrame = new Translation2d(targetMetersY, -targetMetersX); 
+
+        Translation2d tagOffsetFromRobot_fieldFrame = tagOffsetFromRobot_localRobotFrame.rotateBy(currentHeading);
+
+        Translation2d targetTranslation = currentPose.getTranslation().plus(tagOffsetFromRobot_fieldFrame).plus(approachOffsetField_relativeToTag);
+
+        Pose2d startPos = currentPose;
+
+        Pose2d endPos = new Pose2d(
+            targetTranslation,
+            currentHeading 
+        );
+
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPos, endPos);
+        PathPlannerPath path = new PathPlannerPath(
+            waypoints,
+            new PathConstraints(
+                2.0 * damper, 
+                2.0,
+                Units.degreesToRadians(180),
+                Units.degreesToRadians(270)
+            ),
+            null, 
+            new GoalEndState(0.0, endPos.getRotation()) 
+        );
+
+        path.preventFlipping = true; 
+
+        AutoBuilder.followPath(path).schedule(); 
+    }
 
   public void stop(){
     for(int i = 0; i < modules.length; i++){

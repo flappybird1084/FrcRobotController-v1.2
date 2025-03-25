@@ -117,6 +117,9 @@ public class Robot extends TimedRobot {
     if(joystick.getHID().getXButtonPressed() && messageListener.timeSinceLastMessage() < 1000){
       System.out.println("Running AprilTag better with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
       drive.centerAprilTagPathPlanner(messageListener.getAprilTagPIDReading());
+    } else if (joystick.getHID().getYButtonPressed() && messageListener.timeSinceLastMessage() < 1000) {
+      System.out.println("New Code Working");
+      drive.tagToPath();
     }
     else{
       drive.drive(joystick);
