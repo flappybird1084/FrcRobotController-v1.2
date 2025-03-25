@@ -430,6 +430,32 @@ public class Drive extends SubsystemBase{
         AutoBuilder.followPath(path).schedule(); 
     }
 
+    // Run Path to drive one unit forward
+    public void driveForwardOneUnitPath() {
+        Pose2d currentPose = getPose();
+        Pose2d endPose = new Pose2d(
+            currentPose.getTranslation().plus(new Translation2d(1.0, 0.0)), // 1 unit forward in x direction
+            currentPose.getRotation() // Maintain current rotation
+        );
+
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(currentPose, endPose);
+        PathPlannerPath path = new PathPlannerPath(
+            waypoints,
+            new PathConstraints(
+                1.0, // Max speed (adjust as needed)
+                1.0, // Max acceleration (adjust as needed)
+                Units.degreesToRadians(180),
+                Units.degreesToRadians(270)
+            ),
+            null, // Ideal starting state can be null for on-the-fly paths
+            new GoalEndState(0.0, endPose.getRotation())
+        );
+
+        path.preventFlipping = true;
+
+        AutoBuilder.followPath(path).schedule();
+    }
+
   public void stop(){
     for(int i = 0; i < modules.length; i++){
         modules[i].apply(new ModuleRequest().withWheelForceFeedforwardX(0.0).withWheelForceFeedforwardY(0.0));
