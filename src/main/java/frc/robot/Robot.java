@@ -120,7 +120,9 @@ public class Robot extends TimedRobot {
     } else if (joystick.getHID().getYButtonPressed() && messageListener.timeSinceLastMessage() < 1000) {
       System.out.println("New Code Working");
       drive.tagToPath();
-      drive.drive(joystick);
+    } else if (joystick.getHID().getRightBumperButtonPressed() && messageListener.timeSinceLastMessage() < 1000) {
+      System.out.print("Moving foreward one unit");
+      drive.driveForwardOneUnitPath();
     }
     else{
       drive.drive(joystick);
