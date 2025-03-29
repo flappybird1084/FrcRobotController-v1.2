@@ -42,8 +42,8 @@ public class RobotContainer {
 
     public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    private final double JOYSTICK_LEFT_Y_MULTIPLIER = Constants.JOYSTICK_LEFT_Y_MULTIPLIER;
-    private final double JOYSTICK_LEFT_X_MULTIPLIER = Constants.JOYSTICK_LEFT_X_MULTIPLIER;
+    private final static double JOYSTICK_LEFT_Y_MULTIPLIER = Constants.JOYSTICK_LEFT_Y_MULTIPLIER;
+    private final static double JOYSTICK_LEFT_X_MULTIPLIER = Constants.JOYSTICK_LEFT_X_MULTIPLIER;
 
     
     //accessible by drive.java
@@ -64,6 +64,12 @@ public class RobotContainer {
 
     public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    public static Command driveDefaultCommand = drivetrain.applyRequest(() ->
+    drive.withVelocityX(targetY * MaxSpeed * JOYSTICK_LEFT_Y_MULTIPLIER) // Drive forward with negative Y (forward)
+        .withVelocityY(targetX * MaxSpeed * JOYSTICK_LEFT_X_MULTIPLIER) // Drive left with negative X (left)
+        .withRotationalRate(targetRotationalRate*MaxAngularRate) // Drive counterclockwise with negative X (left)
+);
+
 
     //Subsystems
     Drive driveSubsystem = new Drive();
@@ -82,17 +88,7 @@ public class RobotContainer {
         return MaxSpeed;
     }
 
-
-
-    private void configureBindings() {
-        // driveSubsystem.setDefaultCommand(new JoystickDriveCommand(driveSubsystem, joystick));
-        // elevatorSubsystem.setDefaultCommand(new ElevatorMoveCommand(elevatorSubsystem,joystick));
-
-        SmartDashboard.putData("Example Path", new PathPlannerAuto("squarish auto"));
-
-
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
+    public static void setDefault() {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             // drivetrain.applyRequest(() ->
@@ -107,8 +103,22 @@ public class RobotContainer {
             )
             
         );
+    }
 
 
+
+    private void configureBindings() {
+        // driveSubsystem.setDefaultCommand(new JoystickDriveCommand(driveSubsystem, joystick));
+        // elevatorSubsystem.setDefaultCommand(new ElevatorMoveCommand(elevatorSubsystem,joystick));
+
+        SmartDashboard.putData("Example Path", new PathPlannerAuto("squarish auto"));
+
+
+        // Note that X is defined as forward according to WPILib convention,
+        // and Y is defined as to the left according to WPILib convention.
+        
+
+        setDefault();
         
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
