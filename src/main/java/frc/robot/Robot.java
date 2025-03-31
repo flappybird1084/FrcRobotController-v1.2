@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.Constants;
 import frc.robot.deprecated.AprilTagDetectedMessageListener;
+import frc.robot.deprecated.Hang;
 import frc.robot.subsystems.*;
 import frc.robot.util.AprilTagPIDReading;
 public class Robot extends TimedRobot {
@@ -30,8 +31,8 @@ public class Robot extends TimedRobot {
   // public static Elevator elevator = new Elevator();
   public static MessageListener messageListener = new MessageListener();
   public static Drive drive = new Drive();
-  // public static Intake intake = new Intake();
-  public static Hang hang = new Hang();
+  public static Intake intake = new Intake();
+  // public static Hang hang = new Hang();
 
   double startTime;
 
@@ -130,44 +131,14 @@ public class Robot extends TimedRobot {
     else{
       drive.drive(joystick);
     }
+
+    intake.setIntakePower(coJoystick.getRightY());
     // elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
-    // // if(coJoystick.getHID().getBackButtonPressed()){
-    // //   elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
-    // //   System.out.println("elevator offset reset");
-    // // }s
-
-    // //TODO: REPLACE WHEN WE GET BACK
-    // // if(coJoystick.getHID().getBackButton()){
-    // //   intake.resetEncoderToValue(Constants.MIN_CORAL_POSITION);
-    // // }
-
-    // // if(coJoystick.getHID().getStartButton()){
-    // //   intake.resetEncoderToValue(Constants.MAX_CORAL_POSITION);
-    // // }
-
-    // //hang.setpower...
-
-    // intake.setIntakePower(-coJoystick.getRightY()*0.25);
-    // intake.setPitchPower(coJoystick.getLeftY());
-    // // intake.setPitchPowerLimited(coJoystick.getLeftY());
-    
-
-    // if(coJoystick.getHID().getAButton()){
-    //   intake.setAlgaePower(1);
+    // if(coJoystick.getHID().getBackButtonPressed()){
+    //   elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
+    //   System.out.println("elevator offset reset");
     // }
-
-    // else if(coJoystick.getHID().getXButton()){
-    //   intake.setAlgaePower(-1);
-    // }
-
-    // else{
-    //   intake.setAlgaePower(0);
-    // }
-
-    // hang.setPower(joystick.getLeftTriggerAxis()-joystick.getRightTriggerAxis());
-    hang.setPower(coJoystick.getLeftTriggerAxis()-coJoystick.getRightTriggerAxis());
-
 
     //TODO: MUST RECALIBRATE WHEN WE GET BACK
     // if(coJoystick.getHID().getBButton()){ //preset for coral processor
