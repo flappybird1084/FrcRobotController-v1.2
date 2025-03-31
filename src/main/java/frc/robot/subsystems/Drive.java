@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import java.util.List;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -476,7 +478,46 @@ public void followLambdaPath(Translation2d end){
         ).schedule();
 
 }
-  public void stop(){
+  
+public void centerWithDistanceReading(Translation2d target){
+    Pose2d currentPose = getPose();
+
+    double metersX = target.getX();
+    double metersY = target.getY();
+    Rotation2d targetRotation = target.getAngle();
+ 
+    Pose2d targetPose2d = new Pose2d(currentPose.getX() + metersX, currentPose.getY() + metersY, currentPose.getRotation().plus(targetRotation));
+
+    PIDConstants translationPidConstants = Constants.translationConstants;
+    PIDConstants rotationPidConstants = Constants.rotationConstants;
+
+    PIDController translationPidControllerX = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
+    PIDController translationPidControllerY = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
+    PIDController rotationPidController = new PIDController(rotationPidConstants.kP, rotationPidConstants.kI, rotationPidConstants.kD);
+
+    double errorX = targetPose2d.getX() - currentPose.getX();
+    double errorY = targetPose2d.getY() - currentPose.getY();
+    double errorRotation = targetPose2d.getRotation().minus(currentPose.getRotation()).getDegrees();
+
+
+    translationPidControllerX.setSetpoint(errorX);
+    translationPidControllerY.setSetpoint(errorY);
+    rotationPidController.setSetpoint(errorRotation);
+
+
+    double translationOutputX = translationPidControllerX.calculate(errorX);
+    double translationOutputY = translationPidControllerY.calculate(errorY);
+    double rotationOutput = rotationPidController.calculate(errorRotation);
+
+    RobotContainer.drivetrain.applyRequest(() -> driveRobotCentric
+    .withVelocityX(translationOutputX)
+    .withVelocityY(translationOutputY)
+    .withRotationalRate(rotationOutput)
+    );
+
+}
+
+public void stop(){
     for(int i = 0; i < modules.length; i++){
         modules[i].apply(new ModuleRequest().withWheelForceFeedforwardX(0.0).withWheelForceFeedforwardY(0.0));
     }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -119,8 +121,11 @@ public class Robot extends TimedRobot {
       System.out.println("Running AprilTag better with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
       drive.centerAprilTagPathPlanner(messageListener.getAprilTagPIDReading());
     }
+    // if(joystick.getHID().getYButtonPressed()){
+    //   drive.followLambdaPath(new Translation2d(0.5,0.5));
+    // }
     if(joystick.getHID().getYButtonPressed()){
-      drive.followLambdaPath(new Translation2d(0.5,0.5));
+      drive.centerWithDistanceReading(drive.getPose().plus(new Transform2d(0.5, 0.5, new Rotation2d(0))).getTranslation());
     }
     else{
       drive.drive(joystick);
