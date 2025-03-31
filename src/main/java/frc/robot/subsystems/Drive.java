@@ -50,6 +50,14 @@ public class Drive extends SubsystemBase{
     private double targetAngle;
     private double targetRotationalRate;
     private static PIDController yawPIDController;
+
+    PIDConstants translationPidConstants;
+    PIDConstants rotationPidConstants;
+
+    PIDController translationPidControllerX;
+    PIDController translationPidControllerY;
+    PIDController rotationPidController;
+
     private static ProportionalSlowdownController yawProportionalSlowdownController;
     private final double JOYSTICK_YAW_MULTIPLIER = Constants.JOYSTICK_YAW_MULTIPLIER;
 
@@ -80,6 +88,14 @@ public class Drive extends SubsystemBase{
         modules = drivetrain.getModules(); // does this kill robotcontainer code??
         kinematics = drivetrain.getKinematics(); // does this kill robotcontainer code??
         odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
+
+        translationPidConstants = Constants.translationConstants;
+        rotationPidConstants = Constants.rotationConstants;
+
+        translationPidControllerX = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
+        translationPidControllerY = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
+        rotationPidController = new PIDController(rotationPidConstants.kP, rotationPidConstants.kI, rotationPidConstants.kD);
+
 
         //start pathplanner breaking my head
         try{
@@ -488,12 +504,12 @@ public void centerWithDistanceReading(Translation2d target){
  
     Pose2d targetPose2d = new Pose2d(currentPose.getX() + metersX, currentPose.getY() + metersY, currentPose.getRotation().plus(targetRotation));
 
-    PIDConstants translationPidConstants = Constants.translationConstants;
-    PIDConstants rotationPidConstants = Constants.rotationConstants;
+    // PIDConstants translationPidConstants = Constants.translationConstants;
+    // PIDConstants rotationPidConstants = Constants.rotationConstants;
 
-    PIDController translationPidControllerX = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
-    PIDController translationPidControllerY = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
-    PIDController rotationPidController = new PIDController(rotationPidConstants.kP, rotationPidConstants.kI, rotationPidConstants.kD);
+    // PIDController translationPidControllerX = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
+    // PIDController translationPidControllerY = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
+    // PIDController rotationPidController = new PIDController(rotationPidConstants.kP, rotationPidConstants.kI, rotationPidConstants.kD);
 
     double errorX = targetPose2d.getX() - currentPose.getX();
     double errorY = targetPose2d.getY() - currentPose.getY();
