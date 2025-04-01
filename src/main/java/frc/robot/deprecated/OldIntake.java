@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.deprecated;
 
 import com.revrobotics.spark.SparkMax;
 
@@ -6,7 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
-public class Intake extends SubsystemBase{
+public class OldIntake extends SubsystemBase{
     private final SparkMax pitchMotor;
     private final SparkMax intakeMotor;
 
@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase{
     private final SparkMax algaeIntake2;
 
     private PIDController pitchPidController;
-    public Intake(){
+    public OldIntake(){
         pitchMotor = Constants.intakeNeoPitch;
         intakeMotor = Constants.intakeNeoWheel;
         algaeIntake1 = Constants.algaeNeo1;
