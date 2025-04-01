@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.Constants;
 import frc.robot.deprecated.AprilTagDetectedMessageListener;
-import frc.robot.deprecated.Hang;
 import frc.robot.subsystems.*;
 import frc.robot.util.AprilTagPIDReading;
 public class Robot extends TimedRobot {
@@ -125,9 +124,9 @@ public class Robot extends TimedRobot {
     // if(joystick.getHID().getYButtonPressed()){
     //   drive.followLambdaPath(new Translation2d(0.5,0.5));
     // }
-    if(joystick.getHID().getYButtonPressed()){
-      drive.centerWithDistanceReading(drive.getPose().plus(new Transform2d(0.5, 0.5, new Rotation2d(0))).getTranslation());
-    }
+    // if(joystick.getHID().getYButtonPressed()){
+    //   drive.centerWithDistanceReading(drive.getPose().plus(new Transform2d(0.5, 0.5, new Rotation2d(0))).getTranslation());
+    // }
     else{
       drive.drive(joystick);
     }
