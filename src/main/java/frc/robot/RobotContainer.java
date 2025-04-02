@@ -8,7 +8,10 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -145,7 +148,34 @@ public class RobotContainer {
 
             // return Commands.print("No autonomous command configured");
             // return new PathPlannerAuto("New Auto");
-            return new PathPlannerAuto("squarish auto");
+
+
+            AllianceStationID allianceStationID = DriverStation.getRawAllianceStation();
+
+            try{
+                if (allianceStationID.equals(AllianceStationID.Red1)) {
+                    return new PathPlannerAuto("red-auto-1");
+                } else if (allianceStationID.equals(AllianceStationID.Blue1)) {
+                    return new PathPlannerAuto("blue-auto-1");
+                } else if (allianceStationID.equals(AllianceStationID.Red2)) {
+                    return new PathPlannerAuto("red-auto-2");
+                } else if (allianceStationID.equals(AllianceStationID.Blue2)) {
+                    return new PathPlannerAuto("blue-auto-2");
+                } else if (allianceStationID.equals(AllianceStationID.Red3)) {
+                    return new PathPlannerAuto("red-auto-3");
+                } else if (allianceStationID.equals(AllianceStationID.Blue3)) {
+                    return new PathPlannerAuto("blue-auto-3");
+                } else {
+                    // Handle unknown station ID case
+                    return null;
+                }
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+                return new PathPlannerAuto("squarish auto");
+            }
+
+            // return new PathPlannerAuto("squarish auto");
             
 
     }
