@@ -8,9 +8,12 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.List;
 
+import javax.swing.text.Position;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -75,9 +78,16 @@ public class RobotContainer {
     Drive driveSubsystem = new Drive();
     Elevator elevatorSubsystem = new Elevator();
 
+    // Test Positions
+    ElevatorMoveCommand elevatorMoveCommandUp = new ElevatorMoveCommand(elevatorSubsystem, 0);
+    ElevatorMoveCommand elevatorMoveCommandDown = new ElevatorMoveCommand(elevatorSubsystem, 0);
+
 
     public RobotContainer() {
         configureBindings();
+
+        NamedCommands.registerCommand("ElevatorUp", elevatorMoveCommandUp);
+        NamedCommands.registerCommand("ElevatorDown", elevatorMoveCommandDown);
     }
 
     public void setMaxSpeed(double speed) {
