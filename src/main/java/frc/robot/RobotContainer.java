@@ -168,30 +168,36 @@ public class RobotContainer {
             // return Commands.print("No autonomous command configured");
             // return new PathPlannerAuto("New Auto");
 
+            boolean shouldDoFancyAuto = false;
 
-            AllianceStationID allianceStationID = DriverStation.getRawAllianceStation();
+            if(shouldDoFancyAuto){
+                try{
+                    AllianceStationID allianceStationID = DriverStation.getRawAllianceStation();
 
-            try{
-                if (allianceStationID.equals(AllianceStationID.Red1)) {
-                    return new PathPlannerAuto("red-auto-1");
-                } else if (allianceStationID.equals(AllianceStationID.Blue1)) {
-                    return new PathPlannerAuto("blue-auto-1");
-                } else if (allianceStationID.equals(AllianceStationID.Red2)) {
-                    return new PathPlannerAuto("red-auto-2");
-                } else if (allianceStationID.equals(AllianceStationID.Blue2)) {
-                    return new PathPlannerAuto("blue-auto-2");
-                } else if (allianceStationID.equals(AllianceStationID.Red3)) {
-                    return new PathPlannerAuto("red-auto-3");
-                } else if (allianceStationID.equals(AllianceStationID.Blue3)) {
-                    return new PathPlannerAuto("blue-auto-3");
-                } else {
-                    // Handle unknown station ID case
-                    return null;
+                    if (allianceStationID.equals(AllianceStationID.Red1)) {
+                        return new PathPlannerAuto("red-auto-1");
+                    } else if (allianceStationID.equals(AllianceStationID.Blue1)) {
+                        return new PathPlannerAuto("blue-auto-1");
+                    } else if (allianceStationID.equals(AllianceStationID.Red2)) {
+                        return new PathPlannerAuto("red-auto-2");
+                    } else if (allianceStationID.equals(AllianceStationID.Blue2)) {
+                        return new PathPlannerAuto("blue-auto-2");
+                    } else if (allianceStationID.equals(AllianceStationID.Red3)) {
+                        return new PathPlannerAuto("red-auto-3");
+                    } else if (allianceStationID.equals(AllianceStationID.Blue3)) {
+                        return new PathPlannerAuto("blue-auto-3");
+                    } else {
+                        // Handle unknown station ID case
+                        return new PathPlannerAuto("emergency auto");
+                    }
+                }
+                catch(Exception e){
+                    System.out.println(e.getMessage());
+                    return new PathPlannerAuto("emergency auto");
                 }
             }
-            catch(Exception e){
-                System.out.println(e.getMessage());
-                return new PathPlannerAuto("squarish auto");
+            else{
+                return new PathPlannerAuto("emergency auto");
             }
 
             // return new PathPlannerAuto("squarish auto");
