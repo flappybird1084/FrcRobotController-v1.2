@@ -1,14 +1,15 @@
 package frc.robot.subsystems;
 
-
 import java.util.List;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -16,7 +17,8 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
-
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -45,20 +47,10 @@ public class Drive extends SubsystemBase{
     private double currentAngle;
     private double targetAngle;
     private double targetRotationalRate;
-    @SuppressWarnings("unused")
     private static PIDController yawPIDController;
-
-    PIDConstants translationPidConstants;
-    PIDConstants rotationPidConstants;
-
-    PIDController translationPidControllerX;
-    PIDController translationPidControllerY;
-    PIDController rotationPidController;
-
     private static ProportionalSlowdownController yawProportionalSlowdownController;
     private final double JOYSTICK_YAW_MULTIPLIER = Constants.JOYSTICK_YAW_MULTIPLIER;
 
-    @SuppressWarnings("rawtypes")
     private SwerveModule[] modules = new SwerveModule[4];
     private final SwerveDriveKinematics kinematics;
     private final SwerveDriveOdometry odometry;
@@ -68,7 +60,7 @@ public class Drive extends SubsystemBase{
 
     private double limitedTargetX = 0.0;
     private double limitedTargetY = 0.0;
-    // private final double MAX_DELTA = 0.05; // Max joystick change (to prevent sudden acc)
+    private final double MAX_DELTA = 0.05; // Max joystick change (to prevent sudden acc)
 
     private CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
@@ -86,14 +78,6 @@ public class Drive extends SubsystemBase{
         modules = drivetrain.getModules(); // does this kill robotcontainer code??
         kinematics = drivetrain.getKinematics(); // does this kill robotcontainer code??
         odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
-
-        translationPidConstants = Constants.translationConstants;
-        rotationPidConstants = Constants.rotationConstants;
-
-        translationPidControllerX = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
-        translationPidControllerY = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
-        rotationPidController = new PIDController(rotationPidConstants.kP, rotationPidConstants.kI, rotationPidConstants.kD);
-
 
         //start pathplanner breaking my head
         try{
@@ -151,7 +135,6 @@ public class Drive extends SubsystemBase{
      * @param maxDelta The maximum allowed change per update.
      * @return The new limited target value after applying the rate limit.
      */
-    @SuppressWarnings("unused")
     private double limitDelta(double currentValue, double desiredValue, double maxDelta) {
         double delta = desiredValue - currentValue;
         
@@ -410,7 +393,7 @@ public void centerAprilTagPathPlanner(AprilTagPIDReading aprilTagReading) {
 
 } 
 
-public void followLambdaPath(Translation2d end){
+public void followLambdaPath(Translation2d end) {
     double damper = 0.1; 
 // Pull X and Y offsets from AprilTag
     double targetMetersX = end.getX();
@@ -491,50 +474,13 @@ public void followLambdaPath(Translation2d end){
                 },
                 this // Reference to this subsystem to set requirements
         ).schedule();
-
-}
-  
-public void centerWithDistanceReading(Translation2d target){
-    Pose2d currentPose = getPose();
-
-    double metersX = target.getX();
-    double metersY = target.getY();
-    Rotation2d targetRotation = target.getAngle();
- 
-    Pose2d targetPose2d = new Pose2d(currentPose.getX() + metersX, currentPose.getY() + metersY, currentPose.getRotation().plus(targetRotation));
-
-    // PIDConstants translationPidConstants = Constants.translationConstants;
-    // PIDConstants rotationPidConstants = Constants.rotationConstants;
-
-    // PIDController translationPidControllerX = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
-    // PIDController translationPidControllerY = new PIDController(translationPidConstants.kP, translationPidConstants.kI, translationPidConstants.kD);
-    // PIDController rotationPidController = new PIDController(rotationPidConstants.kP, rotationPidConstants.kI, rotationPidConstants.kD);
-
-    double errorX = targetPose2d.getX() - currentPose.getX();
-    double errorY = targetPose2d.getY() - currentPose.getY();
-    double errorRotation = targetPose2d.getRotation().minus(currentPose.getRotation()).getDegrees();
-
-
-    translationPidControllerX.setSetpoint(errorX);
-    translationPidControllerY.setSetpoint(errorY);
-    rotationPidController.setSetpoint(errorRotation);
-
-
-    double translationOutputX = translationPidControllerX.calculate(errorX);
-    double translationOutputY = translationPidControllerY.calculate(errorY);
-    double rotationOutput = rotationPidController.calculate(errorRotation);
-
-    RobotContainer.drivetrain.applyRequest(() -> driveRobotCentric
-    .withVelocityX(translationOutputX)
-    .withVelocityY(translationOutputY)
-    .withRotationalRate(rotationOutput)
-    );
-
-}
-
-public void stop(){
-    for(int i = 0; i < modules.length; i++){
-        modules[i].apply(new ModuleRequest().withWheelForceFeedforwardX(0.0).withWheelForceFeedforwardY(0.0));
     }
-  }
+
+    
+
+    public void stop(){
+        for(int i = 0; i < modules.length; i++){
+            modules[i].apply(new ModuleRequest().withWheelForceFeedforwardX(0.0).withWheelForceFeedforwardY(0.0));
+        }
+    }
 }
