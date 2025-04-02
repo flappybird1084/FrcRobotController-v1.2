@@ -1,17 +1,14 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.List;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -19,8 +16,7 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -49,6 +45,7 @@ public class Drive extends SubsystemBase{
     private double currentAngle;
     private double targetAngle;
     private double targetRotationalRate;
+    @SuppressWarnings("unused")
     private static PIDController yawPIDController;
 
     PIDConstants translationPidConstants;
@@ -61,6 +58,7 @@ public class Drive extends SubsystemBase{
     private static ProportionalSlowdownController yawProportionalSlowdownController;
     private final double JOYSTICK_YAW_MULTIPLIER = Constants.JOYSTICK_YAW_MULTIPLIER;
 
+    @SuppressWarnings("rawtypes")
     private SwerveModule[] modules = new SwerveModule[4];
     private final SwerveDriveKinematics kinematics;
     private final SwerveDriveOdometry odometry;
@@ -70,7 +68,7 @@ public class Drive extends SubsystemBase{
 
     private double limitedTargetX = 0.0;
     private double limitedTargetY = 0.0;
-    private final double MAX_DELTA = 0.05; // Max joystick change (to prevent sudden acc)
+    // private final double MAX_DELTA = 0.05; // Max joystick change (to prevent sudden acc)
 
     private CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
@@ -153,6 +151,7 @@ public class Drive extends SubsystemBase{
      * @param maxDelta The maximum allowed change per update.
      * @return The new limited target value after applying the rate limit.
      */
+    @SuppressWarnings("unused")
     private double limitDelta(double currentValue, double desiredValue, double maxDelta) {
         double delta = desiredValue - currentValue;
         

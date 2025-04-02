@@ -15,12 +15,12 @@ public class OldIntake extends SubsystemBase{
 
     private PIDController pitchPidController;
     public OldIntake(){
-        pitchMotor = Constants.intakeNeoPitch;
+        // pitchMotor = Constants.intakeNeoPitch;
+        pitchMotor = null;
         intakeMotor = Constants.intakeNeoWheel;
         algaeIntake1 = Constants.algaeNeo1;
         algaeIntake2 = Constants.algaeNeo2;
         pitchPidController = Constants.intakePidController;
-
 
         System.out.println("resetting pitch motor encoder");
     }

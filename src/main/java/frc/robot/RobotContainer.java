@@ -11,30 +11,19 @@ import java.util.List;
 import javax.swing.text.Position;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.proto.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ElevatorMoveCommand;
-import frc.robot.commands.FollowPathCommand;
-import frc.robot.commands.JoystickDriveCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
-import frc.robot.pathplanning.CustomPathPlanner;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
@@ -172,7 +161,34 @@ public class RobotContainer {
 
             // return Commands.print("No autonomous command configured");
             // return new PathPlannerAuto("New Auto");
-            return new PathPlannerAuto("squarish auto");
+
+
+            AllianceStationID allianceStationID = DriverStation.getRawAllianceStation();
+
+            try{
+                if (allianceStationID.equals(AllianceStationID.Red1)) {
+                    return new PathPlannerAuto("red-auto-1");
+                } else if (allianceStationID.equals(AllianceStationID.Blue1)) {
+                    return new PathPlannerAuto("blue-auto-1");
+                } else if (allianceStationID.equals(AllianceStationID.Red2)) {
+                    return new PathPlannerAuto("red-auto-2");
+                } else if (allianceStationID.equals(AllianceStationID.Blue2)) {
+                    return new PathPlannerAuto("blue-auto-2");
+                } else if (allianceStationID.equals(AllianceStationID.Red3)) {
+                    return new PathPlannerAuto("red-auto-3");
+                } else if (allianceStationID.equals(AllianceStationID.Blue3)) {
+                    return new PathPlannerAuto("blue-auto-3");
+                } else {
+                    // Handle unknown station ID case
+                    return null;
+                }
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+                return new PathPlannerAuto("squarish auto");
+            }
+
+            // return new PathPlannerAuto("squarish auto");
             
 
     }

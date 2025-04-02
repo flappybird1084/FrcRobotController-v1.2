@@ -3,11 +3,10 @@ package frc.robot.subsystems;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.util.AprilTagDetected;
+
 import frc.robot.util.AprilTagPIDReading;
 
 public class MessageListener extends SubsystemBase {
