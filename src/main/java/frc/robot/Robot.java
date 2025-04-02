@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
   public static final CommandXboxController joystick = new CommandXboxController(Constants.driverJoystickPort);
   public static final CommandXboxController coJoystick = new CommandXboxController(Constants.coDriverJoystickPort);
 
-  // public static Elevator elevator = new Elevator();
+  public static Elevator elevator = new Elevator();
   public static MessageListener messageListener = new MessageListener();
   public static Drive drive = new Drive();
   public static Intake intake = new Intake();
@@ -132,6 +132,7 @@ public class Robot extends TimedRobot {
     }
 
     intake.setIntakePower(coJoystick.getRightY());
+    elevator.setSpeedNoLimit(joystick.getRightY());
     // elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
     // if(coJoystick.getHID().getBackButtonPressed()){

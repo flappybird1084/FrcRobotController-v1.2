@@ -16,11 +16,11 @@ import static edu.wpi.first.units.Units.*;
 public class Constants {
 
     //Numbers
-    public static final int ELEVATOR_NEO_CAN_ID_1 = 21;
+    public static final int ELEVATOR_NEO_CAN_ID_1 = 23;
     public static final int ELEVATOR_NEO_CAN_ID_2 = 22;
 
-    public static final int INTAKE_NEO_PITCH_CAN_ID = 23;
-    public static final int INTAKE_NEO_WHEEL_CAN_ID = 24; //TODO: implement
+    // public static final int INTAKE_NEO_PITCH_CAN_ID = 23;
+    public static final int INTAKE_NEO_WHEEL_CAN_ID = 24; 
 
     public static final int ALGAE_NEO_CAN_ID_1 = 27;
     public static final int ALGAE_NEO_CAN_ID_2 = 28; 
@@ -28,11 +28,14 @@ public class Constants {
     public static final int HANG_NEO_CAN_ID = 29;
   
     public static final double JOYSTICK_YAW_MULTIPLIER = 4;
-    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-0.7;
+    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-1;
     public static final double ELEVATOR_SETPOINT_CONSTANT = 0.5;
 
-    public static final double MAX_ELEVATOR_POSITION = -3.28; // 3.2 normal
-    public static final double MIN_ELEVATOR_POSITION = 0;
+    // public static final double MAX_ELEVATOR_POSITION = -3.28; // 3.2 normal
+    // public static final double MIN_ELEVATOR_POSITION = 0;
+
+    public static final double MAX_ELEVATOR_POSITION = 3.28; // 3.2 normal
+    public static final double MIN_ELEVATOR_POSITION = -0.5;
 
     public static final double ELEVATOR_SPEED_LIMIT_OFFSET = 0.6;
     public static final double ELEVATOR_SPEED_LIMIT_MULTIPLIER = 0.3;
@@ -84,7 +87,7 @@ public class Constants {
     public static SparkMax elevatorNeo1 = new SparkMax(ELEVATOR_NEO_CAN_ID_1, MotorType.kBrushless);
     public static SparkMax elevatorNeo2 = new SparkMax(ELEVATOR_NEO_CAN_ID_2, MotorType.kBrushless);
 
-    public static SparkMax intakeNeoPitch = new SparkMax(INTAKE_NEO_PITCH_CAN_ID, MotorType.kBrushless);
+    // public static SparkMax intakeNeoPitch = new SparkMax(INTAKE_NEO_PITCH_CAN_ID, MotorType.kBrushless);
     public static SparkMax intakeNeoWheel = new SparkMax(INTAKE_NEO_WHEEL_CAN_ID, MotorType.kBrushless);
 
     public static SparkMax algaeNeo1 = new SparkMax(ALGAE_NEO_CAN_ID_1, MotorType.kBrushless);

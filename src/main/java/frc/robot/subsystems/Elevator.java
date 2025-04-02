@@ -5,6 +5,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.util.BandedSlowdownController;
 
 public class Elevator extends SubsystemBase {
     // Add any necessary fields or methods here
@@ -16,6 +17,8 @@ public class Elevator extends SubsystemBase {
     private PIDController pidController;
     private double neoOffset;
     public static double elevatorOffset = 0;
+    BandedSlowdownController elevatorLimiter;
+    private double adjustedPower;
 
 
     public Elevator() {
@@ -24,6 +27,8 @@ public class Elevator extends SubsystemBase {
         elevatorNeo2 = Constants.elevatorNeo2;
         targetPosition = getPosition()+neoOffset;
         pidController = Constants.elevatorPidController;
+        adjustedPower = 0;
+        elevatorLimiter = new BandedSlowdownController(Constants.MIN_ELEVATOR_POSITION, Constants.MAX_ELEVATOR_POSITION, Constants.ELEVATOR_SPEED_LIMIT_OFFSET);
 
         calibrateBottomPosition();
         // joystick = Constants.joystick;
@@ -62,56 +67,59 @@ public class Elevator extends SubsystemBase {
         // elevatorNeo1.set(this.power);
         // elevatorNeo2.set(this.power);
          // Apply joystick multiplier to the input power
-         if(power == 0){
-            power = 0.02;
-         }
-    this.power = power * Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
+    //      if(power == 0){
+    //         power = 0.02;
+    //      }
+    // this.power = power * Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
     
-    // Adjusted position considering the elevator's offset
-    double position = getPosition() - elevatorOffset;
+    // // Adjusted position considering the elevator's offset
+    // double position = getPosition() - elevatorOffset;
 
-    // Enforce absolute positional limits
-    if (this.power < 0 && position <= Constants.MAX_ELEVATOR_POSITION) {
-        this.power = 0;
-    }
-    if (this.power > 0 && position >= Constants.MIN_ELEVATOR_POSITION) {
-        this.power = 0;
-    }
+    // // Enforce absolute positional limits
+    // if (this.power < 0 && position <= Constants.MAX_ELEVATOR_POSITION) {
+    //     this.power = 0;
+    // }
+    // if (this.power > 0 && position >= Constants.MIN_ELEVATOR_POSITION) {
+    //     this.power = 0;
+    // }
 
-    // Proportional Slowdown Near Maximum Position (Upward Movement)
-    if (this.power < 0 && position < (Constants.MAX_ELEVATOR_POSITION + Constants.ELEVATOR_SPEED_LIMIT_OFFSET)) {
-        double distanceToMax = position - Constants.MAX_ELEVATOR_POSITION;
-        // Calculate slowdown factor (clamped between 0 and 1)
-        double slowdownFactor = Math.max(0.0, distanceToMax / Constants.ELEVATOR_SPEED_LIMIT_OFFSET);
-        // Apply the slowdown factor to the motor power
-        this.power *= slowdownFactor;
-    }
+    // // Proportional Slowdown Near Maximum Position (Upward Movement)
+    // if (this.power < 0 && position < (Constants.MAX_ELEVATOR_POSITION + Constants.ELEVATOR_SPEED_LIMIT_OFFSET)) {
+    //     double distanceToMax = position - Constants.MAX_ELEVATOR_POSITION;
+    //     // Calculate slowdown factor (clamped between 0 and 1)
+    //     double slowdownFactor = Math.max(0.0, distanceToMax / Constants.ELEVATOR_SPEED_LIMIT_OFFSET);
+    //     // Apply the slowdown factor to the motor power
+    //     this.power *= slowdownFactor;
+    // }
 
-    // Proportional Slowdown Near Minimum Position (Downward Movement)
-    if (this.power > 0 && position > (Constants.MIN_ELEVATOR_POSITION - Constants.ELEVATOR_SPEED_LIMIT_OFFSET)) {
-        double distanceToMin = Constants.MIN_ELEVATOR_POSITION - position;
-        // Calculate slowdown factor (clamped between 0 and 1)
-        double slowdownFactor = Math.max(0.0, distanceToMin / Constants.ELEVATOR_SPEED_LIMIT_OFFSET);
-        // Apply the slowdown factor to the motor power
-        this.power *= slowdownFactor;
-    }
+    // // Proportional Slowdown Near Minimum Position (Downward Movement)
+    // if (this.power > 0 && position > (Constants.MIN_ELEVATOR_POSITION - Constants.ELEVATOR_SPEED_LIMIT_OFFSET)) {
+    //     double distanceToMin = Constants.MIN_ELEVATOR_POSITION - position;
+    //     // Calculate slowdown factor (clamped between 0 and 1)
+    //     double slowdownFactor = Math.max(0.0, distanceToMin / Constants.ELEVATOR_SPEED_LIMIT_OFFSET);
+    //     // Apply the slowdown factor to the motor power
+    //     this.power *= slowdownFactor;
+    // }
 
-    if(Math.abs(power) < 0.02){
-        this.power *= 2;
-    } else if (getPosition() < -2.75) {
-        this.power *= 2.5;
-    } 
+    // if(Math.abs(power) < 0.02){
+    //     this.power *= 2;
+    // } else if (getPosition() < -2.75) {
+    //     this.power *= 2.5;
+    // } 
 
+
+    adjustedPower = elevatorLimiter.calculateAdjustedPower(power, getPosition());
 
     // Set the motor outputs with the adjusted power
-    elevatorNeo1.set(this.power);
-    elevatorNeo2.set(this.power);
+    elevatorNeo1.set(adjustedPower);
+    elevatorNeo2.set(adjustedPower);
     }
 
     public void setSpeedNoLimit(double power){
         this.power = power*Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
         elevatorNeo1.set(this.power);
         elevatorNeo2.set(this.power);
+        System.out.println(elevatorNeo1.get());
     }
 
     public double getPosition() {

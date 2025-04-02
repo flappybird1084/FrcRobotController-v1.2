@@ -97,12 +97,13 @@ public class Telemetry {
         SmartDashboard.putNumber("Target Rot. Rate", Robot.drive.getTargetRotationalRate());
         SmartDashboard.putString("Last Network Message", Robot.messageListener.getLastMessage());
         SmartDashboard.putNumber("Time since last detection", Robot.messageListener.timeSinceLastMessage());
+        SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
+
         // SmartDashboard.putNumber("pid x", Robot.messageListener.getAprilTagPIDReading().getPidX());
         // SmartDashboard.putNumber("pid z", Robot.messageListener.getAprilTagPIDReading().getPidZ());
         SmartDashboard.putNumber("meters x", Robot.messageListener.getAprilTagPIDReading().getMetersX());
         SmartDashboard.putNumber("meters y", Robot.messageListener.getAprilTagPIDReading().getMetersY());
         SmartDashboard.putNumber("degrees pose", Robot.messageListener.getAprilTagPIDReading().getTagRotation());
-        // SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
         // SmartDashboard.putNumber("Elevator Offset", Robot.elevator.elevatorOffset);
         // SmartDashboard.putNumber("Coral Pitch Position", Robot.intake.getPosition());
         // SmartDashboard.putNumber("Hang Position", Robot.hang.getPosition());
