@@ -23,11 +23,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.ElevatorMoveCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 
 public class RobotContainer {
     public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -67,6 +69,7 @@ public class RobotContainer {
     //Subsystems
     Drive driveSubsystem = new Drive();
     Elevator elevatorSubsystem = new Elevator();
+    Intake intakeSubsystem = new Intake();
 
     // Test Positions
     ElevatorMoveCommand elevatorMoveCommandUp = new ElevatorMoveCommand(elevatorSubsystem, 0);
@@ -78,6 +81,8 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("ElevatorUp", elevatorMoveCommandUp);
         NamedCommands.registerCommand("ElevatorDown", elevatorMoveCommandDown);
+
+        NamedCommands.registerCommand("IntakeOut", new IntakeCommand(intakeSubsystem));
     }
 
     public void setMaxSpeed(double speed) {
