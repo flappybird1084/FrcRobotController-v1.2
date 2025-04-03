@@ -33,11 +33,12 @@ public class Constants {
     // public static final double MAX_ELEVATOR_POSITION = -3.28; // 3.2 normal
     // public static final double MIN_ELEVATOR_POSITION = 0;
 
-    public static final double MAX_ELEVATOR_POSITION = 3.28; // 3.2 normal
-    public static final double MIN_ELEVATOR_POSITION = -0.5;
+    public static final double MAX_ELEVATOR_POSITION = -2.6; // 3.2 normal
+    public static final double MIN_ELEVATOR_POSITION = 0;
 
     public static final double ELEVATOR_SPEED_LIMIT_OFFSET = 0.6;
     public static final double ELEVATOR_SPEED_LIMIT_MULTIPLIER = 0.3;
+    public static final double ELEVATOR_OFFSET_POS = 0;
 
     public static final double JOYSTICK_CORAL_MULTIPLIER = -0.1;
     public static final double CORAL_PITCH_SPEED_LIMIT_OFFSET = 0.75;

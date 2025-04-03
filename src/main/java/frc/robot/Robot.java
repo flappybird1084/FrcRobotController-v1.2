@@ -113,23 +113,31 @@ public class Robot extends TimedRobot {
     //   System.out.println("Running AprilTag with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
     //   drive.centerAprilTagWithPIDReading(messageListener.getAprilTagPIDReading());
     // }
-    if(joystick.getHID().getXButtonPressed() && messageListener.timeSinceLastMessage() < 1000){
-      System.out.println("Running AprilTag better with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
-      drive.centerAprilTagPathPlanner(messageListener.getAprilTagPIDReading());
-    }
-    // if(joystick.getHID().getYButtonPressed()){
-    //   drive.followLambdaPath(new Translation2d(0.5,0.5));
+    // if(joystick.getHID().getXButtonPressed() && messageListener.timeSinceLastMessage() < 1000){
+    //   System.out.println("Running AprilTag better with PID Reading: "+messageListener.getAprilTagPIDReading().toString());
+    //   drive.centerAprilTagPathPlanner(messageListener.getAprilTagPIDReading());
     // }
-    // if(joystick.getHID().getYButtonPressed()){
-    //   drive.centerWithDistanceReading(drive.getPose().plus(new Transform2d(0.5, 0.5, new Rotation2d(0))).getTranslation());
+    // // if(joystick.getHID().getYButtonPressed()){
+    // //   drive.followLambdaPath(new Translation2d(0.5,0.5));
+    // // }
+    // // if(joystick.getHID().getYButtonPressed()){
+    // //   drive.centerWithDistanceReading(drive.getPose().plus(new Transform2d(0.5, 0.5, new Rotation2d(0))).getTranslation());
+    // // }
+    // else{
+    //   drive.drive(joystick);
     // }
-    else{
-      drive.drive(joystick);
+
+    if (joystick.getHID().getRightBumperButton()) {
+      drive.drive(joystick, 0.25);
+    } else {
+      drive.drive(joystick, 1);
+
     }
 
     intake.setIntakePower(coJoystick.getRightY());
     // elevator.setSpeedNoLimit(joystick.getRightY());
-    elevator.setSpeedNoLimit(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+    //elevator.setSpeedNoLimit(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+    elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
 
     // if(coJoystick.getHID().getBackButtonPressed()){
     //   elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
@@ -138,23 +146,23 @@ public class Robot extends TimedRobot {
     
 
     //TODO: MUST RECALIBRATE 
-    if(false){
-      if(coJoystick.getHID().getBButton()){ //empty preset
-        elevator.setPosition(-0.48);
-        // intake.setIntakePower(-0.25);
-        if(elevator.getPosition()>-0.55){
-          intake.setIntakePower(-0.25);
-        }
+    // if(false){
+    //   if(coJoystick.getHID().getBButton()){ //empty preset
+    //     elevator.setPosition(-0.48);
+    //     // intake.setIntakePower(-0.25);
+    //     if(elevator.getPosition()>-0.55){
+    //       intake.setIntakePower(-0.25);
+    //     }
         
-      }
-      if(coJoystick.getHID().getYButton()){ //preset for L3
-        elevator.setPosition(-2.25);
-        // intake.setIntakePower(0.15);
-        if(elevator.getPosition()<-2.0){
-          intake.setIntakePower(0.07);
-        }
-      }
-    }
+    //   }
+    //   if(coJoystick.getHID().getYButton()){ //preset for L3
+    //     elevator.setPosition(-2.25);
+    //     // intake.setIntakePower(0.15);
+    //     if(elevator.getPosition()<-2.0){
+    //       intake.setIntakePower(0.07);
+    //     }
+    //   }
+    // }
 
       
     

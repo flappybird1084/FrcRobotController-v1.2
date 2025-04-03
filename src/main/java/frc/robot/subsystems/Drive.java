@@ -165,10 +165,10 @@ public class Drive extends SubsystemBase{
     }
     
 
-    public void drive(CommandXboxController joystick) {
+    public void drive(CommandXboxController joystick, double joystickMultiplier) {
         currentAngle = gyro.getYaw().getValueAsDouble();
         if (Math.abs(joystick.getRightX()) > 0.1) {
-            targetAngle -= joystick.getRightX() * JOYSTICK_YAW_MULTIPLIER;
+            targetAngle -= joystick.getRightX() * JOYSTICK_YAW_MULTIPLIER * joystickMultiplier;
         }
     
         // yawPIDController.setSetpoint(targetAngle);
@@ -183,8 +183,8 @@ public class Drive extends SubsystemBase{
 
         RobotContainer.targetRotationalRate = targetRotationalRate;
         // Get the desired joystick inputs
-        double desiredY = joystick.getLeftY();
-        double desiredX = joystick.getLeftX();
+        double desiredY = joystick.getLeftY() *joystickMultiplier;
+        double desiredX = joystick.getLeftX() *joystickMultiplier;
 
         // Apply rate limiting to the joystick inputs
         

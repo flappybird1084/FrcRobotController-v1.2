@@ -16,7 +16,7 @@ public class JoystickDriveCommand extends Command {
 
     @Override
     public void execute() {
-        driveSubsystem.drive(joystick);
+        driveSubsystem.drive(joystick, 1);
     }
 
     @Override

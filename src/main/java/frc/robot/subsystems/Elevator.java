@@ -41,39 +41,37 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setSpeed(double power){
-        // this.power = power * Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
-        // double position = getPosition()-Constants.ELEVATOR_OFFSET_POS;
+        this.power = power * Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
+        double position = getPosition() - elevatorOffset;
 
-        // // Limits
-        // if (this.power < 0 && position <= Constants.MAX_ELEVATOR_POSITION) this.power = 0;
-        // if (this.power > 0 && position >= Constants.MIN_ELEVATOR_POSITION) this.power = 0;
+        // Limits
+        if (this.power < 0 && position <= Constants.MAX_ELEVATOR_POSITION) this.power = 0;
+        if (this.power > 0 && position >= Constants.MIN_ELEVATOR_POSITION) this.power = 0;
 
-        // // Speed Limiting when near the limits
-        // if (this.power < 0 && position <= Constants.MAX_ELEVATOR_POSITION + Constants.ELEVATOR_SPEED_LIMIT_OFFSET)
-        //  this.power = Math.max(Constants.JOYSTICK_ELEVATOR_MULTIPLIER*Constants.ELEVATOR_SPEED_LIMIT_MULTIPLIER, this.power);
+        // Speed Limiting when near the limits
+        if (this.power < 0 && position <= Constants.MAX_ELEVATOR_POSITION + Constants.ELEVATOR_SPEED_LIMIT_OFFSET)
+         this.power = Math.max(Constants.JOYSTICK_ELEVATOR_MULTIPLIER*Constants.ELEVATOR_SPEED_LIMIT_MULTIPLIER, this.power);
          
-        // if (this.power > 0 && position >= Constants.MIN_ELEVATOR_POSITION-Constants.ELEVATOR_SPEED_LIMIT_OFFSET)
-        //  this.power = Math.min(-Constants.JOYSTICK_ELEVATOR_MULTIPLIER*Constants.ELEVATOR_SPEED_LIMIT_MULTIPLIER, this.power);
+        if (this.power > 0 && position >= Constants.MIN_ELEVATOR_POSITION-Constants.ELEVATOR_SPEED_LIMIT_OFFSET)
+         this.power = Math.min(-Constants.JOYSTICK_ELEVATOR_MULTIPLIER*Constants.ELEVATOR_SPEED_LIMIT_MULTIPLIER, this.power);
 
-        // // PIDController elevatorPidController = new PIDController(1, 0, 0); // PID Controller for Elevator
-        // // double slowdownUp = elevatorPidController.calculate(this.getPosition(), Constants.MAX_ELEVATOR_POSITION);
-        // // double slowdownDown = elevatorPidController.calculate(this.getPosition(), Constants.MIN_ELEVATOR_POSITION);
+        // PIDController elevatorPidController = new PIDController(1, 0, 0); // PID Controller for Elevator
+        // double slowdownUp = elevatorPidController.calculate(this.getPosition(), Constants.MAX_ELEVATOR_POSITION);
+        // double slowdownDown = elevatorPidController.calculate(this.getPosition(), Constants.MIN_ELEVATOR_POSITION);
     
-        // // this.power = power - Math.min(slowdownUp, slowdownDown);
+        // this.power = power - Math.min(slowdownUp, slowdownDown);
     
 
 
 
-        // elevatorNeo1.set(this.power);
-        // elevatorNeo2.set(this.power);
-         // Apply joystick multiplier to the input power
+        elevatorNeo1.set(this.power);
+        elevatorNeo2.set(this.power);
+    //      //Apply joystick multiplier to the input power
     //      if(power == 0){
     //         power = 0.02;
     //      }
     // this.power = power * Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
     
-    // // Adjusted position considering the elevator's offset
-    // double position = getPosition() - elevatorOffset;
 
     // // Enforce absolute positional limits
     // if (this.power < 0 && position <= Constants.MAX_ELEVATOR_POSITION) {
@@ -108,11 +106,11 @@ public class Elevator extends SubsystemBase {
     // } 
 
 
-    adjustedPower = elevatorLimiter.calculateAdjustedPower(power, getPosition());
+    // adjustedPower = elevatorLimiter.calculateAdjustedPower(power, getPosition());
 
-    // Set the motor outputs with the adjusted power
-    elevatorNeo1.set(adjustedPower);
-    elevatorNeo2.set(adjustedPower);
+    // // Set the motor outputs with the adjusted power
+    // elevatorNeo1.set(adjustedPower);
+    // elevatorNeo2.set(adjustedPower);
     }
 
     public void setSpeedNoLimit(double power){
