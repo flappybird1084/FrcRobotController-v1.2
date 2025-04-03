@@ -27,7 +27,7 @@ public class Constants {
     public static final int HANG_NEO_CAN_ID = 29;
   
     public static final double JOYSTICK_YAW_MULTIPLIER = 4;
-    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-1;
+    public static final double JOYSTICK_ELEVATOR_MULTIPLIER =-0.5;
     public static final double ELEVATOR_SETPOINT_CONSTANT = 0.5;
 
     // public static final double MAX_ELEVATOR_POSITION = -3.28; // 3.2 normal

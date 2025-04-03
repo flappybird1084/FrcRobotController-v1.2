@@ -119,7 +119,7 @@ public class Elevator extends SubsystemBase {
         this.power = power*Constants.JOYSTICK_ELEVATOR_MULTIPLIER;
         elevatorNeo1.set(this.power);
         elevatorNeo2.set(this.power);
-        System.out.println(elevatorNeo1.get());
+        // System.out.println(elevatorNeo1.get());
     }
 
     public double getPosition() {
