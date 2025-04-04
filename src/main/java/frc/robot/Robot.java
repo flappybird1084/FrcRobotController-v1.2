@@ -134,7 +134,17 @@ public class Robot extends TimedRobot {
 
     }
 
-    intake.setIntakePower(coJoystick.getRightY());
+    double rightY = coJoystick.getRightY();
+    if (Math.abs(rightY) < 0.05) {
+        rightY = 0; // Set to zero if within deadzone
+    }
+
+    if(!coJoystick.getHID().getLeftBumperButton()){
+      intake.setIntakePower(rightY*Constants.JOYSTICK_CORAL_MULTIPLIER);
+    }
+    else{
+      intake.setIntakePower(rightY);
+    }
     // elevator.setSpeedNoLimit(joystick.getRightY());
     //elevator.setSpeedNoLimit(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
     elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());

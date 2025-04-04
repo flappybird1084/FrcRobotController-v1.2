@@ -40,7 +40,7 @@ public class Constants {
     public static final double ELEVATOR_SPEED_LIMIT_MULTIPLIER = 0.3;
     public static final double ELEVATOR_OFFSET_POS = 0;
 
-    public static final double JOYSTICK_CORAL_MULTIPLIER = -0.1;
+    public static final double JOYSTICK_CORAL_MULTIPLIER = 0.2;
     public static final double CORAL_PITCH_SPEED_LIMIT_OFFSET = 0.75;
     public static final double CORAL_BOOST_STOP = 3.38;
     public static final double MIN_CORAL_POSITION = 0;
