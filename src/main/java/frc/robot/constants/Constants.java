@@ -55,11 +55,11 @@ public class Constants {
     public static final int IP_ADDRESS_LISTEN_PORT = 1234;
     public static final String LISTEN_IP_ADDRESS = "0.0.0.0";
 
-    public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 0.3;
-    public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.3;
+    // public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 0.3;
+    // public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.3;
 
-    // public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 0.5;
-    // public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.5;
+    public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 0.6;
+    public static final double JOYSTICK_LEFT_X_MULTIPLIER = 0.6;
 
     // public static final double JOYSTICK_LEFT_Y_MULTIPLIER = 1.0;
     // public static final double JOYSTICK_LEFT_X_MULTIPLIER = 1.0;
