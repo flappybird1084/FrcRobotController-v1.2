@@ -137,7 +137,7 @@ public class Robot extends TimedRobot {
     intake.setIntakePower(coJoystick.getRightY());
     // elevator.setSpeedNoLimit(joystick.getRightY());
     //elevator.setSpeedNoLimit(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
-    elevator.setSpeed(joystick.getRightTriggerAxis()-joystick.getLeftTriggerAxis());
+    elevator.setSpeed(coJoystick.getRightTriggerAxis()-coJoystick.getLeftTriggerAxis());
 
     // if(coJoystick.getHID().getBackButtonPressed()){
     //   elevator.elevatorOffset = elevator.getPosition()-Constants.MIN_ELEVATOR_POSITION;
