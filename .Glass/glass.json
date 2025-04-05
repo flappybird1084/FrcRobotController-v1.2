@@ -9,7 +9,9 @@
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
-      "/SmartDashboard/PathPlanner": "Alerts"
+      "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/Run Center W/Pose2d": "Command",
+      "/SmartDashboard/Run Test Lambda Path": "Command"
     },
     "windows": {
       "/SmartDashboard/Field": {

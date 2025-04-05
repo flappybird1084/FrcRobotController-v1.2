@@ -7,7 +7,9 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.text.Position;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -16,12 +18,18 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.hal.AllianceStationID;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.CenterOnPoint;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.constants.Constants;
@@ -39,6 +47,8 @@ public class RobotContainer {
 
     private final static double JOYSTICK_LEFT_Y_MULTIPLIER = Constants.JOYSTICK_LEFT_Y_MULTIPLIER;
     private final static double JOYSTICK_LEFT_X_MULTIPLIER = Constants.JOYSTICK_LEFT_X_MULTIPLIER;
+
+    public static boolean doTeleopDriving;
 
     
     //accessible by drive.java
@@ -115,15 +125,32 @@ public class RobotContainer {
     private void configureBindings() {
         // driveSubsystem.setDefaultCommand(new JoystickDriveCommand(driveSubsystem, joystick));
         // elevatorSubsystem.setDefaultCommand(new ElevatorMoveCommand(elevatorSubsystem,joystick));
+        setDefault();
+        
+        // SmartDashboard.putData("Example Path", new PathPlannerAuto("squarish auto"));
+        // SmartDashboard.putData("Run Test Lambda Path", new InstantCommand(() -> {
+        //     driveSubsystem.pauseTeleopDriving();
+        //     driveSubsystem.followLambdaPath(new Translation2d(0,0)); //will resume when done
+        // }));
 
-        SmartDashboard.putData("Example Path", new PathPlannerAuto("squarish auto"));
+        
 
+        // SmartDashboard.putData("Run Center W/Pose2d", new InstantCommand(() -> {
+        //     driveSubsystem.pauseTeleopDriving();
+        //     driveSubsystem.centerWithDistanceReading(new Pose2d(0.5,0.5, new Rotation2d(0)));
+        // }));
 
+        // SmartDashboard.putData("Run Center W/Pose2d", new CenterOnPoint(driveSubsystem, new Pose2d(0.5,0.5,new Rotation2d(0))));
+
+        // Trigger t = joystick.x();
+        // t.whileTrue(new CenterOnPoint(driveSubsystem, new Pose2d(0.5,0.5,new Rotation2d(0))));
+
+        // t.whileTrue(new InstantCommand(() -> System.out.println("hoho hop")));
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         
 
-        setDefault();
+       
         
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));

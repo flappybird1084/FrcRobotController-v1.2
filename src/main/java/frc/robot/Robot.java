@@ -126,6 +126,9 @@ public class Robot extends TimedRobot {
     // else{
     //   drive.drive(joystick);
     // }
+    RobotContainer.doTeleopDriving = drive.getTeleopDriving();
+    // System.out.println("Teleop Driving: "+RobotContainer.doTeleopDriving);
+
 
     if (joystick.getHID().getRightBumperButton()) {
       drive.drive(joystick, 0.25);

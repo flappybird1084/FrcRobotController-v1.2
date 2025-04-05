@@ -104,6 +104,8 @@ public class Telemetry {
         SmartDashboard.putNumber("meters x", Robot.messageListener.getAprilTagPIDReading().getMetersX());
         SmartDashboard.putNumber("meters y", Robot.messageListener.getAprilTagPIDReading().getMetersY());
         SmartDashboard.putNumber("degrees pose", Robot.messageListener.getAprilTagPIDReading().getTagRotation());
+        SmartDashboard.putBoolean("drive enabled", Robot.drive.getTeleopDriving());
+
         // SmartDashboard.putNumber("Elevator Offset", Robot.elevator.elevatorOffset);
         // SmartDashboard.putNumber("Coral Pitch Position", Robot.intake.getPosition());
         // SmartDashboard.putNumber("Hang Position", Robot.hang.getPosition());

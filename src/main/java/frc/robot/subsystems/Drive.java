@@ -33,6 +33,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
@@ -77,8 +78,15 @@ public class Drive extends SubsystemBase{
 
     public static RobotConfig config;
 
+    public static boolean doTeleopDriving = true;
+    public static boolean stopCentering = false;
+
 
     public Drive() {
+        doTeleopDriving = true;
+        stopCentering = false;
+
+
         this.targetAngle = gyro.getYaw().getValueAsDouble();
         yawPIDController = Constants.yawPIDController;
         yawProportionalSlowdownController = new ProportionalSlowdownController();
@@ -166,36 +174,39 @@ public class Drive extends SubsystemBase{
     
 
     public void drive(CommandXboxController joystick, double joystickMultiplier) {
-        currentAngle = gyro.getYaw().getValueAsDouble();
-        if (Math.abs(joystick.getRightX()) > 0.1) {
-            targetAngle -= joystick.getRightX() * JOYSTICK_YAW_MULTIPLIER * joystickMultiplier;
-        }
-    
-        // yawPIDController.setSetpoint(targetAngle);
-        // targetRotationalRate = yawPIDController.calculate(currentAngle);
-        if(Math.abs(joystick.getRightX()) < 0.1){
-            targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle, 0.01);
-        }
-        // if(Math.abs(joystick.getRightX()) < 0.03){targetRotationalRate=0;}
-        else{
-        targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle);
-        }
-
-        RobotContainer.targetRotationalRate = targetRotationalRate;
-        // Get the desired joystick inputs
-        double desiredY = joystick.getLeftY() *joystickMultiplier;
-        double desiredX = joystick.getLeftX() *joystickMultiplier;
-
-        // Apply rate limiting to the joystick inputs
+        if(doTeleopDriving){
+            
+            currentAngle = gyro.getYaw().getValueAsDouble();
+            if (Math.abs(joystick.getRightX()) > 0.1) {
+                targetAngle -= joystick.getRightX() * JOYSTICK_YAW_MULTIPLIER * joystickMultiplier;
+            }
         
-        // limitedTargetY = limitDelta(limitedTargetY, desiredY, MAX_DELTA);
-        // limitedTargetX = limitDelta(limitedTargetX, desiredX, MAX_DELTA);
-        limitedTargetX = desiredX;
-        limitedTargetY = desiredY;
+            // yawPIDController.setSetpoint(targetAngle);
+            // targetRotationalRate = yawPIDController.calculate(currentAngle);
+            if(Math.abs(joystick.getRightX()) < 0.1){
+                targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle, 0.01);
+            }
+            // if(Math.abs(joystick.getRightX()) < 0.03){targetRotationalRate=0;}
+            else{
+            targetRotationalRate = yawProportionalSlowdownController.calculate(currentAngle, targetAngle);
+            }
 
-        // Update targetY and targetX with the limited values
-        RobotContainer.targetY = limitedTargetY;
-        RobotContainer.targetX = limitedTargetX;
+            RobotContainer.targetRotationalRate = targetRotationalRate;
+            // Get the desired joystick inputs
+            double desiredY = joystick.getLeftY() *joystickMultiplier;
+            double desiredX = joystick.getLeftX() *joystickMultiplier;
+
+            // Apply rate limiting to the joystick inputs
+            
+            // limitedTargetY = limitDelta(limitedTargetY, desiredY, MAX_DELTA);
+            // limitedTargetX = limitDelta(limitedTargetX, desiredX, MAX_DELTA);
+            limitedTargetX = desiredX;
+            limitedTargetY = desiredY;
+
+            // Update targetY and targetX with the limited values
+            RobotContainer.targetY = limitedTargetY;
+            RobotContainer.targetX = limitedTargetX;
+        }
     }
 
     public Pose2d getPose() {
@@ -225,6 +236,18 @@ public class Drive extends SubsystemBase{
 
     public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds) {
         driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
+    }
+
+    public void pauseTeleopDriving() {
+        doTeleopDriving = false;
+    }
+
+    public void resumeTeleopDriving() {
+        doTeleopDriving = true;
+    }
+
+    public boolean getTeleopDriving(){
+        return doTeleopDriving;
     }
 
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
@@ -490,19 +513,34 @@ public void followLambdaPath(Translation2d end){
                   return false;
                 },
                 this // Reference to this subsystem to set requirements
+        ).andThen(
+            new InstantCommand(() -> {
+                doTeleopDriving = true;
+            })
         ).schedule();
 
 }
+
+public Pose2d getDefinitePose(Pose2d additiveTarget){
+    Pose2d currentPose2d = getPose();
+    double metersX = additiveTarget.getX();
+    double metersY = additiveTarget.getY();
+    Rotation2d targetRotation = additiveTarget.getRotation();
+
+    return new Pose2d(currentPose2d.getX() + metersX, currentPose2d.getY() + metersY, currentPose2d.getRotation().plus(targetRotation));
+
+}
   
-public void centerWithDistanceReading(Translation2d target){
+public void centerWithDistanceReading(Pose2d target){
     Pose2d currentPose = getPose();
 
-    double metersX = target.getX();
-    double metersY = target.getY();
-    Rotation2d targetRotation = target.getAngle();
+    // double metersX = target.getX();
+    // double metersY = target.getY();
+    // Rotation2d targetRotation = target.getAngle();
  
-    Pose2d targetPose2d = new Pose2d(currentPose.getX() + metersX, currentPose.getY() + metersY, currentPose.getRotation().plus(targetRotation));
+    // Pose2d targetPose2d = new Pose2d(currentPose.getX() + metersX, currentPose.getY() + metersY, currentPose.getRotation().plus(targetRotation));
 
+    Pose2d targetPose2d = target;
     // PIDConstants translationPidConstants = Constants.translationConstants;
     // PIDConstants rotationPidConstants = Constants.rotationConstants;
 
@@ -514,21 +552,25 @@ public void centerWithDistanceReading(Translation2d target){
     double errorY = targetPose2d.getY() - currentPose.getY();
     double errorRotation = targetPose2d.getRotation().minus(currentPose.getRotation()).getDegrees();
 
+    if(Math.min(Math.abs(errorX), Math.abs(errorY)) < 0.2){
+        stopCentering = true;
+    }
 
-    translationPidControllerX.setSetpoint(errorX);
-    translationPidControllerY.setSetpoint(errorY);
-    rotationPidController.setSetpoint(errorRotation);
+
+    translationPidControllerX.setSetpoint(targetPose2d.getX());
+    translationPidControllerY.setSetpoint(targetPose2d.getY());
+    rotationPidController.setSetpoint(targetPose2d.getRotation().getDegrees());
 
 
-    double translationOutputX = translationPidControllerX.calculate(errorX);
-    double translationOutputY = translationPidControllerY.calculate(errorY);
-    double rotationOutput = rotationPidController.calculate(errorRotation);
+    double translationOutputX = translationPidControllerX.calculate(currentPose.getX());
+    double translationOutputY = translationPidControllerY.calculate(currentPose.getY());
+    double rotationOutput = rotationPidController.calculate(currentPose.getRotation().getDegrees());
 
     RobotContainer.drivetrain.applyRequest(() -> driveRobotCentric
     .withVelocityX(translationOutputX)
     .withVelocityY(translationOutputY)
     .withRotationalRate(rotationOutput)
-    );
+    ).schedule();
 
 }
 
